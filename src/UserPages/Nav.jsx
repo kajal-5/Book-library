@@ -3,6 +3,7 @@ import { BsCartCheckFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../Store/authSlice";
+import { clearCart } from "../Store/CartSlice";
 import { useState, useEffect } from "react";
 
 const Nav = ({ searchQuery: propSearchQuery, setSearchQuery: propSetSearchQuery }) => {
@@ -25,6 +26,8 @@ const Nav = ({ searchQuery: propSearchQuery, setSearchQuery: propSetSearchQuery 
   const setSearchQuery = hasPropsSearch ? propSetSearchQuery : setLocalSearchQuery;
 
   const handleLogout = () => {
+    // Clear cart from Redux store on logout
+    dispatch(clearCart());
     dispatch(logout());
     navigate("/login", { replace: true });
   };
@@ -201,12 +204,31 @@ const Nav = ({ searchQuery: propSearchQuery, setSearchQuery: propSetSearchQuery 
           </button>
 
           {/* USER PROFILE CIRCLE */}
-          <div className="flex items-center justify-center flex-shrink-0 ml-1 sm:ml-2">
-            <div className="bg-white rounded-full p-0.5 shadow-lg flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9">
+          <div className="relative flex items-center justify-center flex-shrink-0 ml-1 sm:ml-2 group">
+            <button className="bg-white rounded-full p-0.5 shadow-lg flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9">
               <div className="bg-gradient-to-br from-teal-500 to-blue-600 rounded-full w-full h-full flex items-center justify-center">
                 <span className="text-white font-bold text-[10px] sm:text-xs md:text-sm">
                   {userInitial}
                 </span>
+              </div>
+            </button>
+            
+            {/* Hover Tooltip */}
+            <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-xl p-3 min-w-[200px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="bg-gradient-to-br from-teal-500 to-blue-600 rounded-full w-10 h-10 flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">{userInitial}</span>
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-gray-800 truncate">
+                    {userEmail?.split('@')[0]}
+                  </p>
+                </div>
+              </div>
+              <div className="border-t pt-2">
+                <p className="text-xs text-gray-600 break-all">
+                  📧 {userEmail}
+                </p>
               </div>
             </div>
           </div>

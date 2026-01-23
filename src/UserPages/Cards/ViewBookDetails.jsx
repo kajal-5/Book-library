@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const ViewBookDetails = ({ book, isOpen, onClose, onPurchase, onRent, adminContact }) => {
+const ViewBookDetails = ({ book, isOpen, onClose, onPurchase, onRent, adminContact, isProcessing }) => {
   const [quantity, setQuantity] = useState(1);
   const [showPurchaseDialog, setShowPurchaseDialog] = useState(false);
   const [showRentDialog, setShowRentDialog] = useState(false);
@@ -235,15 +235,17 @@ const ViewBookDetails = ({ book, isOpen, onClose, onPurchase, onRent, adminConta
               <div className="flex gap-3">
                 <button 
                   onClick={() => handleAddToCart("purchase")}
-                  className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-md"
+                  disabled={isProcessing}
+                  className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Add to Cart
                 </button>
                 <button 
                   onClick={() => handleBuyNow("purchase")}
-                  className="flex-1 bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-lg font-semibold hover:from-green-600 hover:to-green-700 transition-all shadow-md"
+                  disabled={isProcessing}
+                  className="flex-1 bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-lg font-semibold hover:from-green-600 hover:to-green-700 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Buy Now
+                  {isProcessing ? "Processing..." : "Buy Now"}
                 </button>
               </div>
               <button 
@@ -321,15 +323,17 @@ const ViewBookDetails = ({ book, isOpen, onClose, onPurchase, onRent, adminConta
               <div className="flex gap-3">
                 <button 
                   onClick={() => handleAddToCart("rent")}
-                  className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-md"
+                  disabled={isProcessing}
+                  className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Add to Cart
                 </button>
                 <button 
                   onClick={() => handleBuyNow("rent")}
-                  className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-blue-700 transition-all shadow-md"
+                  disabled={isProcessing}
+                  className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-blue-700 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Buy Now
+                  {isProcessing ? "Processing..." : "Buy Now"}
                 </button>
               </div>
               <button 

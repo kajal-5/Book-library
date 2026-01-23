@@ -50,9 +50,9 @@ const UserNotificationCard = ({ notification }) => {
   
   return (
     <div className="bg-red-100 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
-      {notification.imageUrl ? (
+      {notification.bookImage || notification.imageUrl ? (
         <img
-          src={notification.imageUrl}
+          src={notification.bookImage || notification.imageUrl}
           alt={notification.bookName || "Notification"}
           className="w-full h-36 sm:h-40 md:h-48 object-cover"
         />

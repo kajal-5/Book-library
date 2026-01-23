@@ -18,6 +18,7 @@ const DropBook = () => {
   });
   const [customCategory, setCustomCategory] = useState("");
   const [showCustomInput, setShowCustomInput] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,11 +36,13 @@ const DropBook = () => {
     }
   };
 
-  // Calculate 70% of MRP price (amount user will receive)
-  const calculatedPayment = form.mrpPrice ? (parseFloat(form.mrpPrice) * 0.7).toFixed(2) : "0";
+  // Calculate 70% of MRP price * quantity (amount user will receive)
+  const calculatedPayment = form.mrpPrice && form.quantity ? (parseFloat(form.mrpPrice) * 0.7 * parseInt(form.quantity)).toFixed(2) : "0";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    
     const trimmedName = form.name.trim();
     if (!trimmedName) {
       alert("Book name cannot be empty or just spaces.");
@@ -54,29 +57,38 @@ const DropBook = () => {
       alert("Please select or enter a category!");
       return;
     }
-    const requestData = {
-      userEmail: userEmail || "unknown",
-      date: new Date().toISOString(),
-      name: trimmedName,
-      description: form.description.trim(),
-      type: finalCategory,
-      mrpPrice: parseFloat(form.mrpPrice),
-      price: parseFloat(calculatedPayment), // 70% of MRP - amount user receives
-      quantity: Number(form.quantity),
-      imageUrl: form.imageUrl,
-    };
-    await dispatch(createDropRequest(requestData));
-    setForm({
-      name: "",
-      description: "",
-      type: "",
-      mrpPrice: "",
-      quantity: "",
-      imageUrl: "",
-    });
-    setCustomCategory("");
-    setShowCustomInput(false);
-    navigate("/user");
+    
+    setIsSubmitting(true);
+    try {
+      const requestData = {
+        userEmail: userEmail || "unknown",
+        date: new Date().toISOString(),
+        name: trimmedName,
+        description: form.description.trim(),
+        type: finalCategory,
+        mrpPrice: parseFloat(form.mrpPrice),
+        price: parseFloat(calculatedPayment), // 70% of MRP - amount user receives
+        quantity: Number(form.quantity),
+        imageUrl: form.imageUrl,
+      };
+      await dispatch(createDropRequest(requestData));
+      setForm({
+        name: "",
+        description: "",
+        type: "",
+        mrpPrice: "",
+        quantity: "",
+        imageUrl: "",
+      });
+      setCustomCategory("");
+      setShowCustomInput(false);
+      navigate("/user");
+    } catch (error) {
+      console.error("Error submitting drop request:", error);
+      alert("Failed to submit request. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleCancel = () => {
@@ -108,6 +120,14 @@ const DropBook = () => {
               onChange={handleChange} 
               className="w-full border-2 border-gray-300 rounded-lg px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" 
               required 
+            />
+            <textarea 
+              name="description" 
+              placeholder="Book Description" 
+              value={form.description} 
+              onChange={handleChange} 
+              rows={2}
+              className="w-full border-2 border-gray-300 rounded-lg px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none" 
             />
             <select
               name="type"
@@ -168,7 +188,7 @@ const DropBook = () => {
             </div>
             <div className="bg-rose-50 border-2 border-rose-300 rounded-lg px-3 py-2 text-xs sm:text-sm">
               <span className="font-semibold text-rose-700">💰 You will receive: ₹{calculatedPayment}</span>
-              <span className="text-rose-600 text-xs ml-2">(70% of MRP)</span>
+              <span className="text-rose-600 text-xs ml-2">(70% of MRP × Quantity)</span>
             </div>
             <input 
               type="text" 
@@ -189,9 +209,10 @@ const DropBook = () => {
               </button>
               <button 
                 type="submit" 
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-5 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg"
+                disabled={isSubmitting}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-5 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Submit Request
+                {isSubmitting ? "Submitting..." : "Submit Request"}
               </button>
             </div>
           </div>

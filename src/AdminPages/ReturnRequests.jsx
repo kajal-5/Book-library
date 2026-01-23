@@ -101,8 +101,9 @@ const ReturnRequests = () => {
       return;
     }
 
-    if (processingIds.has(selectedRequest.id)) return;
+    if (processingIds.has(selectedRequest.id) || isSubmittingReject) return;
     
+    setIsSubmittingReject(true);
     setProcessingIds(prev => new Set([...prev, selectedRequest.id]));
     const result = await rejectBookReturn(
       selectedRequest.rentalId,
@@ -143,6 +144,7 @@ const ReturnRequests = () => {
         return newSet;
       });
     }
+    setIsSubmittingReject(false);
   };
 
   if (loading) {
@@ -312,9 +314,10 @@ const ReturnRequests = () => {
               </button>
               <button 
                 onClick={handleRejectSubmit}
-                className="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white py-2 rounded-lg font-semibold hover:from-red-600 hover:to-red-700 transition-all"
+                disabled={isSubmittingReject}
+                className="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white py-2 rounded-lg font-semibold hover:from-red-600 hover:to-red-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Confirm Reject
+                {isSubmittingReject ? "⏳ Processing..." : "Confirm Cancel"}
               </button>
             </div>
           </div>

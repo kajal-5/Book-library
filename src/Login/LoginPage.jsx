@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../Store/authSlice";
+import { loadCartFromFirebase } from "../Store/CartSlice";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { loading, error, token, role } = useSelector(
+  const { loading, error, token, role, email } = useSelector(
     (state) => state.auth
   );
 
@@ -38,12 +39,17 @@ const LoginPage = () => {
   useEffect(() => {
     if (!token || !role) return;
 
+    // Load user's cart from Firebase after successful login
+    if (email && role === "user") {
+      dispatch(loadCartFromFirebase(email));
+    }
+
     if (role === "admin") {
       navigate("/admin", { replace: true });
     } else {
       navigate("/user", { replace: true });
     }
-  }, [token, role, navigate]);
+  }, [token, role, email, navigate, dispatch]);
 
   /* ================= CLEAR FORM ON ERROR ================= */
   useEffect(() => {

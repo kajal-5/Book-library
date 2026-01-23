@@ -17,6 +17,7 @@ const AddBook = () => {
   });
   const [customCategory, setCustomCategory] = useState("");
   const [showCustomInput, setShowCustomInput] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,6 +37,8 @@ const AddBook = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    
     const trimmedName = form.name.trim();
     if (!trimmedName) {
       alert("Book name cannot be empty or just spaces.");
@@ -50,26 +53,35 @@ const AddBook = () => {
       alert("Please select or enter a category!");
       return;
     }
-    const bookData = {
-      name: trimmedName,
-      description: form.description.trim(),
-      type: finalCategory,
-      price: parseFloat(form.price),
-      quantity: Number(form.quantity),
-      imageUrl: form.imageUrl,
-    };
-    await dispatch(addBook(bookData));
-    setForm({
-      name: "",
-      description: "",
-      type: "",
-      price: "",
-      quantity: "",
-      imageUrl: "",
-    });
-    setCustomCategory("");
-    setShowCustomInput(false);
-    navigate("/admin");
+    
+    setIsSubmitting(true);
+    try {
+      const bookData = {
+        name: trimmedName,
+        description: form.description.trim(),
+        type: finalCategory,
+        price: parseFloat(form.price),
+        quantity: Number(form.quantity),
+        imageUrl: form.imageUrl,
+      };
+      await dispatch(addBook(bookData));
+      setForm({
+        name: "",
+        description: "",
+        type: "",
+        price: "",
+        quantity: "",
+        imageUrl: "",
+      });
+      setCustomCategory("");
+      setShowCustomInput(false);
+      navigate("/admin");
+    } catch (error) {
+      console.error("Error adding book:", error);
+      alert("Failed to add book. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleCancel = () => {
@@ -179,9 +191,10 @@ const AddBook = () => {
             </button>
             <button 
               type="submit" 
-              className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2.5 text-sm font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg transform hover:scale-105"
+              disabled={isSubmitting}
+              className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2.5 text-sm font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
-              Submit
+              {isSubmitting ? "Submitting..." : "Submit"}
             </button>
           </div>
         </form>

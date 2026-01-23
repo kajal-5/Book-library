@@ -6,6 +6,7 @@ import BookCard from "./Cards/UserBookCards";
 import { use, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBooks } from "../Store/BookSlice";
+import { loadCartFromFirebase } from "../Store/CartSlice";
 import { setNotificationCount, validateToken } from "../Store/authSlice";
 import { getUserNotificationsApi } from "../APIs/RequestAPi";
 import { checkRentalPeriods } from "../APIs/RentalNotificationService";
@@ -21,6 +22,11 @@ const UserHome = () => {
 
   // Filter books based on search query and category
   const filteredBooks = books.filter((book) => {
+    // Don't show books with quantity 0
+    if (!book.quantity || book.quantity === 0) {
+      return false;
+    }
+
     const query = searchQuery.toLowerCase();
     const matchesSearch = 
       book.name.toLowerCase().includes(query) ||
@@ -48,6 +54,13 @@ const UserHome = () => {
 
     return () => clearInterval(interval);
   }, [dispatch]);
+
+  // Load user's cart from Firebase
+  useEffect(() => {
+    if (userEmail) {
+      dispatch(loadCartFromFirebase(userEmail));
+    }
+  }, [userEmail, dispatch]);
 
   // Fetch notification count periodically
   useEffect(() => {
@@ -99,7 +112,7 @@ const UserHome = () => {
     // Validate immediately on mount
     dispatch(validateToken());
 
-    // Validate every 5 minutess
+    // Validate every 5 minutes
     const interval = setInterval(() => {
       dispatch(validateToken());
     }, 5 * 60 * 1000); // 5 minutes
@@ -108,7 +121,7 @@ const UserHome = () => {
   }, [dispatch]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-violet-700 via-teal-300 via-purple-800 via-sky-600 via-fuchsia-700 to-rose-700">
+    <div className="min-h-screen bg-gradient-to-r from-violet-600 via-teal-300 via-purple-700 via-sky-500 via-fuchsia-700 to-rose-500">
       <Nav searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <Categories selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
   

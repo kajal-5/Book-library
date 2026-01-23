@@ -168,8 +168,9 @@ const AdminNotifications = () => {
       return;
     }
 
-    if (processingIds.has(selectedRequest.id)) return; // Prevent duplicate clicks
+    if (processingIds.has(selectedRequest.id) || isSubmittingReject) return; // Prevent duplicate clicks
 
+    setIsSubmittingReject(true);
     setProcessingIds(prev => new Set(prev).add(selectedRequest.id));
     const result = await rejectBookReturn(
       selectedRequest.rentalId,
@@ -205,6 +206,7 @@ const AdminNotifications = () => {
       newSet.delete(selectedRequest.id);
       return newSet;
     });
+    setIsSubmittingReject(false);
   };
 
   const pendingRequests = requests.filter((req) => req.status === "pending");
@@ -286,9 +288,10 @@ const AdminNotifications = () => {
               </button>
               <button 
                 onClick={handleRejectSubmit}
-                className="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white py-2 rounded-lg font-semibold hover:from-red-600 hover:to-red-700 transition-all"
+                disabled={isSubmittingReject}
+                className="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white py-2 rounded-lg font-semibold hover:from-red-600 hover:to-red-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Confirm Cancel
+                {isSubmittingReject ? "⏳ Processing..." : "Confirm Cancel"}
               </button>
             </div>
           </div>

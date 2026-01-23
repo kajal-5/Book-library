@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import CartItem from "./Cards/CartItem";
 import Nav from "./Nav";
-import { clearCart } from "../Store/CartSlice";
+import { clearCart, saveCartItemToFirebase, deleteCartItemFromFirebase, clearCartFromFirebase, addToCart, removeFromCart, updateCartItemQuantity } from "../Store/CartSlice";
 import { saveTransaction, createCartPurchaseTransaction, createCartRentTransaction, createCartSecurityDepositTransaction } from "../APIs/TransactionAPI";
 
 const Cart = () => {
@@ -12,7 +12,103 @@ const Cart = () => {
   const cartItems = useSelector((state) => state.cart.items);
   const totalCount = useSelector((state) => state.cart.totalCount);
   const totalAmount = useSelector((state) => state.cart.totalAmount);
+  const userEmail = useSelector((state) => state.auth.email);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [itemAvailability, setItemAvailability] = useState({});
+  const [adminContact, setAdminContact] = useState("");
+
+  // Fetch admin contact
+  useEffect(() => {
+    const fetchAdminContact = async () => {
+      try {
+        const response = await fetch(
+          `https://book-app-339c8-default-rtdb.firebaseio.com/users.json`
+        );
+        const users = await response.json();
+        
+        if (users) {
+          const adminUser = Object.values(users).find(user => user.role === "admin" || user.isAdmin);
+          if (adminUser && adminUser.contactNo) {
+            setAdminContact(adminUser.contactNo);
+          } else {
+            const firstUserWithContact = Object.values(users).find(user => user.contactNo);
+            if (firstUserWithContact) {
+              setAdminContact(firstUserWithContact.contactNo);
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching admin contact:", error);
+      }
+    };
+    
+    fetchAdminContact();
+  }, []);
+
+  // Check availability of all cart items
+  useEffect(() => {
+    const checkAvailability = async () => {
+      const bookNameToKey = (name) => name.trim().toLowerCase().replace(/\s+/g, "-");
+      const availability = {};
+
+      for (const item of cartItems) {
+        const bookKey = bookNameToKey(item.book.name);
+        try {
+          const response = await fetch(`https://book-app-339c8-default-rtdb.firebaseio.com/books/${bookKey}.json`);
+          const currentBook = await response.json();
+          
+          if (currentBook) {
+            availability[item.id] = {
+              available: currentBook.quantity,
+              isAvailable: currentBook.quantity >= item.quantity
+            };
+          } else {
+            availability[item.id] = {
+              available: 0,
+              isAvailable: false
+            };
+          }
+        } catch (error) {
+          console.error(`Error checking availability for ${item.book.name}:`, error);
+          availability[item.id] = {
+            available: 0,
+            isAvailable: false
+          };
+        }
+      }
+
+      setItemAvailability(availability);
+    };
+
+    if (cartItems.length > 0) {
+      checkAvailability();
+      // Re-check every 5 seconds
+      const interval = setInterval(checkAvailability, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [cartItems]);
+
+  // Calculate totals only for available items
+  const availableItemsTotal = cartItems.reduce((total, item) => {
+    const availability = itemAvailability[item.id];
+    if (availability && availability.isAvailable) {
+      return total + item.totalPrice;
+    }
+    return total;
+  }, 0);
+
+  const availableItemsCount = cartItems.reduce((count, item) => {
+    const availability = itemAvailability[item.id];
+    if (availability && availability.isAvailable) {
+      return count + item.quantity;
+    }
+    return count;
+  }, 0);
+
+  const outOfStockCount = cartItems.length - cartItems.filter(item => {
+    const availability = itemAvailability[item.id];
+    return availability && availability.isAvailable;
+  }).length;
 
   const handleCheckout = async () => {
     if (cartItems.length === 0) {
@@ -32,33 +128,44 @@ const Cart = () => {
       // Helper function to get book key from name
       const bookNameToKey = (name) => name.trim().toLowerCase().replace(/\s+/g, "-");
 
-      // Validate all items are still available before processing
+      // Separate available and unavailable items
+      const availableItems = [];
       const unavailableItems = [];
+      
       for (const item of cartItems) {
-        const bookKey = bookNameToKey(item.book.name);
-        const bookResponse = await fetch(`https://book-app-339c8-default-rtdb.firebaseio.com/books/${bookKey}.json`);
-        const currentBook = await bookResponse.json();
-        
-        if (!currentBook || currentBook.quantity < item.quantity) {
+        const availability = itemAvailability[item.id];
+        if (availability && availability.isAvailable) {
+          availableItems.push(item);
+        } else {
           unavailableItems.push({
             name: item.book.name,
-            available: currentBook ? currentBook.quantity : 0,
+            available: availability ? availability.available : 0,
             requested: item.quantity
           });
         }
       }
 
-      // If any items are unavailable, show error
-      if (unavailableItems.length > 0) {
-        const errorMsg = unavailableItems.map(item => 
-          `"${item.name}" - Available: ${item.available}, You requested: ${item.requested}`
-        ).join('\n');
-        alert(`Some items are no longer available:\n\n${errorMsg}\n\nPlease update your cart.`);
+      // If ALL items are unavailable, cannot checkout
+      if (availableItems.length === 0) {
+        alert('All items in your cart are currently out of stock. Please remove them and try again.');
         return;
       }
 
-      // Process each item in cart
-      for (const item of cartItems) {
+      // If some items are unavailable, confirm to proceed with available items only
+      if (unavailableItems.length > 0) {
+        const unavailableMsg = unavailableItems.map(item => 
+          `"${item.name}" - Available: ${item.available}, You requested: ${item.requested}`
+        ).join('\n');
+        const proceed = window.confirm(
+          `Some items are out of stock and will be skipped:\n\n${unavailableMsg}\n\nDo you want to proceed with the ${availableItems.length} available item(s)?`
+        );
+        if (!proceed) {
+          return;
+        }
+      }
+
+      // Process only available items
+      for (const item of availableItems) {
         const bookKey = bookNameToKey(item.book.name);
 
         // Decrease book quantity in /books
@@ -87,6 +194,7 @@ const Cart = () => {
             quantity: item.quantity,
             totalPrice: item.totalPrice,
             userEmail: userEmail,
+            adminContact: adminContact,
             purchaseDate: new Date().toISOString(),
             timestamp: Date.now()
           };
@@ -110,7 +218,7 @@ const Cart = () => {
           const diffTime = Math.abs(end - start);
           const rentalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-          // Save rental to Firebase
+          // Save rental to Firebase - Match exact structure of buy now rental
           const rentalData = {
             bookId: item.book.id || item.book.key,
             bookName: item.book.name,
@@ -120,12 +228,13 @@ const Cart = () => {
             bookType: item.book.type,
             quantity: item.quantity,
             userEmail: userEmail,
+            adminContact: adminContact,
             startDate: item.startDate,
             endDate: item.endDate,
             rentalDays: rentalDays,
-            rentalFee: item.rentalFee,
-            securityDeposit: item.securityDeposit,
-            totalAmount: item.totalAmount,
+            rentalFee: typeof item.rentalFee === 'number' ? item.rentalFee.toFixed(2) : String(item.rentalFee),
+            securityDeposit: typeof item.securityDeposit === 'number' ? item.securityDeposit.toFixed(2) : String(item.securityDeposit),
+            totalAmount: typeof item.totalPrice === 'number' ? item.totalPrice.toFixed(2) : String(item.totalPrice),
             rentalDate: new Date().toISOString(),
             status: "active",
             returnStatus: "not_returned"
@@ -148,6 +257,10 @@ const Cart = () => {
 
       alert("Order placed successfully!");
       dispatch(clearCart());
+      // Clear cart from Firebase after successful order
+      if (userEmail) {
+        await dispatch(clearCartFromFirebase(userEmail));
+      }
       navigate("/user");
     } catch (error) {
       console.error("Checkout error:", error);
@@ -186,7 +299,11 @@ const Cart = () => {
             {/* Cart Items */}
             <div className="lg:col-span-2 space-y-4">
               {cartItems.map((item) => (
-                <CartItem key={item.id} item={item} />
+                <CartItem 
+                  key={item.id} 
+                  item={item} 
+                  availability={itemAvailability[item.id]}
+                />
               ))}
             </div>
 
@@ -195,11 +312,28 @@ const Cart = () => {
               <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 sticky top-6">
                 <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4">Order Summary</h3>
                 
+                {outOfStockCount > 0 && (
+                  <div className="bg-red-50 border-2 border-red-200 rounded-lg p-3 mb-3">
+                    <p className="text-xs sm:text-sm text-red-700 font-semibold">
+                      ⚠️ {outOfStockCount} item{outOfStockCount > 1 ? 's' : ''} out of stock
+                    </p>
+                    <p className="text-xs text-red-600 mt-1">
+                      Only available items will be charged
+                    </p>
+                  </div>
+                )}
+
                 <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-4 pb-3 sm:pb-4 border-b">
                   <div className="flex justify-between text-sm sm:text-base text-gray-600">
-                    <span>Items ({totalCount})</span>
-                    <span>₹{totalAmount.toFixed(2)}</span>
+                    <span>Available Items ({availableItemsCount})</span>
+                    <span>₹{availableItemsTotal.toFixed(2)}</span>
                   </div>
+                  {outOfStockCount > 0 && (
+                    <div className="flex justify-between text-xs sm:text-sm text-red-600">
+                      <span>Out of Stock ({totalCount - availableItemsCount})</span>
+                      <span>-₹{(totalAmount - availableItemsTotal).toFixed(2)}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between text-sm sm:text-base text-gray-600">
                     <span>Delivery</span>
                     <span className="text-green-600 font-semibold">FREE</span>
@@ -208,7 +342,7 @@ const Cart = () => {
 
                 <div className="flex justify-between text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6">
                   <span>Total</span>
-                  <span className="text-blue-600">₹{totalAmount.toFixed(2)}</span>
+                  <span className="text-blue-600">₹{availableItemsTotal.toFixed(2)}</span>
                 </div>
 
                 <button 

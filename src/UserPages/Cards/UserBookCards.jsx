@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../../Store/CartSlice";
+import { addToCart, saveCartItemToFirebase } from "../../Store/CartSlice";
+import { fetchBooks } from "../../Store/BookSlice";
 import { saveTransaction, createPurchaseTransaction, createRentTransaction, createSecurityDepositTransaction } from "../../APIs/TransactionAPI";
 import ViewBookDetails from "./ViewBookDetails";
 
@@ -10,6 +11,7 @@ const BookCard = ({ book }) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [adminContact, setAdminContact] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     const email = localStorage.getItem("email");
@@ -54,12 +56,45 @@ const BookCard = ({ book }) => {
     }
 
     if (action === "addToCart") {
-      // Add to cart
-      dispatch(addToCart({ book, quantity, type: "purchase" }));
+      // Create unique ID
+      const cartItemId = `${book.id || book.key}_purchase_${Date.now()}`;
+      
+      // Add to Redux first for immediate UI update
+      dispatch(addToCart({ 
+        book, 
+        quantity, 
+        type: "purchase", 
+        userEmail,
+        id: cartItemId
+      }));
+      
+      // Prepare cart item for Firebase
+      const cartItem = {
+        id: cartItemId,
+        book: {
+          id: book.id || book.key,
+          name: book.name,
+          price: book.price,
+          imageUrl: book.imageUrl,
+          description: book.description,
+          type: book.type,
+        },
+        quantity,
+        itemType: "purchase",
+        totalPrice: book.price * quantity,
+        addedAt: new Date().toISOString(),
+        userEmail: userEmail,
+      };
+      
+      // Save to Firebase (will update firebaseId in Redux when complete)
+      dispatch(saveCartItemToFirebase(cartItem));
+      
       alert("Item added to cart!");
       setIsViewModalOpen(false);
     } else if (action === "buyNow") {
       // Process immediate purchase
+      if (isProcessing) return;
+      setIsProcessing(true);
       try {
         const purchaseData = {
           bookName: book.name,
@@ -107,11 +142,14 @@ const BookCard = ({ book }) => {
         setTimeout(() => {
           setShowSuccess(false);
           setIsViewModalOpen(false);
-          window.location.reload();
+          // Refresh book list from Redux store instead of reloading page
+          dispatch(fetchBooks());
         }, 2000);
       } catch (error) {
         console.error("Purchase error:", error);
         alert("Failed to complete purchase. Please try again.");
+      } finally {
+        setIsProcessing(false);
       }
     }
   };
@@ -143,7 +181,10 @@ const BookCard = ({ book }) => {
     const totalAmount = rentalFee + securityDeposit;
 
     if (action === "addToCart") {
-      // Add to cart
+      // Create unique ID
+      const cartItemId = `${book.id || book.key}_rent_${Date.now()}`;
+      
+      // Add to Redux first for immediate UI update
       dispatch(addToCart({ 
         book, 
         quantity, 
@@ -152,12 +193,42 @@ const BookCard = ({ book }) => {
         endDate,
         rentalFee,
         securityDeposit,
-        totalAmount
+        totalAmount,
+        userEmail,
+        id: cartItemId
       }));
+      
+      // Prepare cart item for Firebase
+      const cartItem = {
+        id: cartItemId,
+        book: {
+          id: book.id || book.key,
+          name: book.name,
+          price: book.price,
+          imageUrl: book.imageUrl,
+          description: book.description,
+          type: book.type,
+        },
+        quantity,
+        itemType: "rent",
+        totalPrice: totalAmount,
+        rentalFee,
+        securityDeposit,
+        addedAt: new Date().toISOString(),
+        userEmail: userEmail,
+        startDate,
+        endDate,
+      };
+      
+      // Save to Firebase (will update firebaseId in Redux when complete)
+      dispatch(saveCartItemToFirebase(cartItem));
+      
       alert("Item added to cart!");
       setIsViewModalOpen(false);
     } else if (action === "buyNow") {
       // Process immediate rental
+      if (isProcessing) return;
+      setIsProcessing(true);
       try {
         const rentalData = {
           bookId: book.id || book.key,
@@ -199,11 +270,14 @@ const BookCard = ({ book }) => {
         setTimeout(() => {
           setShowSuccess(false);
           setIsViewModalOpen(false);
-          window.location.reload();
+          // Refresh book list from Redux store instead of reloading page
+          dispatch(fetchBooks());
         }, 2000);
       } catch (error) {
         console.error("Rental error:", error);
         alert("Failed to complete rental. Please try again.");
+      } finally {
+        setIsProcessing(false);
       }
     }
   };
@@ -275,6 +349,7 @@ const BookCard = ({ book }) => {
         onPurchase={handlePurchase}
         onRent={handleRent}
         adminContact={adminContact}
+        isProcessing={isProcessing}
       />
 
       {/* Success Message */}

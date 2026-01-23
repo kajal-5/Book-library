@@ -127,7 +127,7 @@ export const createCartPurchaseTransaction = (cartItem, userEmail) => {
     bookName: cartItem.book.name,
     bookImage: cartItem.book.imageUrl,
     quantity: cartItem.quantity,
-    amount: cartItem.book.price * cartItem.quantity,
+    amount: cartItem.totalPrice, // Use calculated totalPrice from cart
     userEmail: userEmail,
     description: `Cart purchase: ${cartItem.quantity}x ${cartItem.book.name}`
   };

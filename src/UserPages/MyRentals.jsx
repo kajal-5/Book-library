@@ -6,6 +6,7 @@ const MyRentals = () => {
   const [rentals, setRentals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userEmail, setUserEmail] = useState("");
+  const [requestingReturn, setRequestingReturn] = useState(new Set());
 
   useEffect(() => {
     const email = localStorage.getItem("email");
@@ -39,7 +40,10 @@ const MyRentals = () => {
   };
 
   const handleRequestReturn = async (rentalId) => {
+    if (requestingReturn.has(rentalId)) return;
+    
     if (window.confirm("Do you want to request return for this book?")) {
+      setRequestingReturn(prev => new Set([...prev, rentalId]));
       const result = await requestBookReturn(rentalId, userEmail);
       if (result.success) {
         alert(result.message);
@@ -47,6 +51,11 @@ const MyRentals = () => {
       } else {
         alert(result.message);
       }
+      setRequestingReturn(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(rentalId);
+        return newSet;
+      });
     }
   };
 
@@ -179,9 +188,10 @@ const MyRentals = () => {
                         <div className="space-y-2">
                           <button 
                             onClick={() => handleRequestReturn(rental.id)}
-                            className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-2 rounded-lg text-sm sm:text-base font-semibold hover:from-green-600 hover:to-green-700 transition-all shadow-md"
+                            disabled={requestingReturn.has(rental.id)}
+                            className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-2 rounded-lg text-sm sm:text-base font-semibold hover:from-green-600 hover:to-green-700 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                           >
-                            📤 Request Return
+                            {requestingReturn.has(rental.id) ? "⏳ Requesting..." : "📤 Request Return"}
                           </button>
                           {diffDays >= 0 && (
                             <p className="text-xs text-center text-blue-600">

@@ -110,6 +110,7 @@ const SignupPage = () => {
               value={formData.contactNo}
               onChange={handleChange}
               pattern="[0-9]{10}"
+              title="Mobile number must be 10 digits"
               className="w-full border rounded-md px-3 py-2 text-sm sm:text-base"
               required
             />
