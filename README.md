@@ -397,33 +397,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-## 👨‍💻 Developer
-
-**Himans SR**
-
-- GitHub: [@himanssr](https://github.com/himanssr)
-- Project: Book Library Rental System
-
 ---
 
-## 🙏 Acknowledgments
-
-- React team for the amazing framework
-- Firebase for backend infrastructure
-- Tailwind CSS for styling utilities
-- Redux team for state management
-- All contributors and users
-
----
-
-## 📞 Support
-
-For support, please:
-- Open an issue in the GitHub repository
-- Contact the development team
-- Check the [RENTAL_SYSTEM_GUIDE.md](RENTAL_SYSTEM_GUIDE.md) for detailed documentation
-
----
 
 <div align="center">
 
