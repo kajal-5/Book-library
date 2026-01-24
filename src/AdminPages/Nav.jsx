@@ -75,7 +75,7 @@ const Nav = ({ onMenuClick }) => {
   }, [storeToken]);
   
   return (
-    <nav className="w-full bg-gradient-to-r from-rose-400  via-purple-500 via-pink-400 to-red-400  px-2 sm:px-3 md:px-6 py-3 sm:py-4 shadow-lg">
+    <nav className="w-full bg-gradient-to-r from-rose-500  via-purple-600 via-pink-500 to-red-500  px-2 sm:px-3 md:px-6 py-3 sm:py-4 shadow-lg">
       {/* MAIN ROW */}
       <div className="flex items-center justify-between gap-0.5 sm:gap-1 md:gap-4">
         {/* LOGO – flexible */}

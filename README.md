@@ -2,12 +2,6 @@
 
 <div align="center">
 
-![React](https://img.shields.io/badge/React-19.2.0-61DAFB?style=for-the-badge&logo=react&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-7.2.4-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![Redux](https://img.shields.io/badge/Redux-2.11.2-764ABC?style=for-the-badge&logo=redux&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/Tailwind-4.1.18-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Firebase](https://img.shields.io/badge/Firebase-Realtime%20DB-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
-
 A modern, full-stack book rental management system with automated notifications, secure transactions, and separate admin/user dashboards.
 
 [Features](#-features) • [Tech Stack](#-tech-stack) • [Installation](#-installation) • [Usage](#-usage) • [Documentation](#-documentation)
@@ -65,11 +59,6 @@ A modern, full-stack book rental management system with automated notifications,
 - **Firebase Realtime Database** - NoSQL cloud database
 - **Firebase Authentication** - User authentication service
 - **REST API Architecture** - Custom API layer over Firebase
-
-### Development Tools
-- **ESLint 9.39.1** - Code linting
-- **PostCSS 8.5.6** - CSS processing
-- **Autoprefixer 10.4.23** - CSS vendor prefixes
 
 ---
 

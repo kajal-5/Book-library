@@ -141,7 +141,7 @@ const AdminHome = () => {
   }, [dispatch]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-400 via-purple-500 to-pink-500 overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-red-500 via-purple-600 to-pink-600 overflow-x-hidden">
       <Nav />
       <Categories selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
  
