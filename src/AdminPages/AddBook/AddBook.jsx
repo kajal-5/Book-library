@@ -89,13 +89,13 @@ const AddBook = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-200 to-pink-500 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-300 to-pink-600 flex flex-col">
       <Nav />
       <div className="flex-1 flex justify-center items-center p-6">
       <div className="w-full max-w-5xl rounded-2xl shadow-2xl p-8 flex flex-col md:flex-row gap-8 bg-indigo-100 backdrop-blur-sm">
         {/* ================= FORM ================= */}
-        <form onSubmit={handleSubmit} className="md:w-[60%] bg-gradient-to-br from-blue-300 to-purple-400 rounded-xl p-6 shadow-lg">
-          <h2 className="text-2xl py-4 font-bold text-gray-800 text-center mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Add New Book</h2>
+        <form onSubmit={handleSubmit} className="md:w-[60%] bg-gradient-to-br from-blue-500 via-purple-500  to-pink-500 rounded-xl p-6 shadow-lg">
+          <h2 className="text-2xl py-4 font-bold text-gray-800 text-center mb-6 bg-gradient-to-r from-red-950 to-purple-800 bg-clip-text text-transparent">Add New Book</h2>
           <div className="space-y-3">
             <input 
               type="text" 
@@ -184,7 +184,7 @@ const AddBook = () => {
           <div className="flex justify-between mt-10 gap-6">
             <button 
               type="button" 
-              className="flex-1 bg-gray-500 text-white px-6 py-2.5 text-sm font-semibold rounded-lg hover:bg-gray-600 transition-all shadow-md hover:shadow-lg transform hover:scale-105" 
+              className="flex-1 bg-gray-600 text-white px-6 py-2.5 text-sm font-semibold rounded-lg hover:bg-gray-600 transition-all shadow-md hover:shadow-lg transform hover:scale-105" 
               onClick={handleCancel}
             >
               Cancel
@@ -192,7 +192,7 @@ const AddBook = () => {
             <button 
               type="submit" 
               disabled={isSubmitting}
-              className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2.5 text-sm font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="flex-1 bg-gradient-to-r from-blue-700 to-purple-800 text-white px-6 py-2.5 text-sm font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
               {isSubmitting ? "Submitting..." : "Submit"}
             </button>
