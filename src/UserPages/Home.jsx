@@ -121,7 +121,7 @@ const UserHome = () => {
   }, [dispatch]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-violet-600 via-teal-300 via-purple-700 via-sky-500 via-fuchsia-700 to-rose-500">
+    <div className="min-h-screen bg-gradient-to-r from-violet-700 via-teal-400 via-purple-800 via-sky-600 via-fuchsia-800 to-rose-600">
       <Nav searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <Categories selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
   

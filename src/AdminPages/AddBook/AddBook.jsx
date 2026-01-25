@@ -199,8 +199,8 @@ const AddBook = () => {
           </div>
         </form>
         {/* ================= PREVIEW CARD ================= */}
-        <div className="md:w-[40%] flex flex-col items-center justify-center rounded-xl p-6 bg-gradient-to-br from-purple-400 to-pink-50 shadow-lg">
-          <h3 className="text-2xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Preview</h3>
+        <div className="md:w-[40%] flex flex-col items-center justify-center rounded-xl p-6 bg-gradient-to-br from-purple-500 to-pink-300 shadow-lg">
+          <h3 className="text-2xl font-bold mb-6 bg-gradient-to-r from-purple-800 to-pink-700 bg-clip-text text-transparent">Preview</h3>
           <div className="w-64 bg-white rounded-xl shadow-xl overflow-hidden border-2 border-gray-200 hover:shadow-lg transition-all">
             {form.imageUrl ? (
               <div className="w-full h-72 bg-gray-100 flex items-center justify-center">

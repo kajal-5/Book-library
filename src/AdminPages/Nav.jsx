@@ -162,7 +162,7 @@ const Nav = ({ onMenuClick }) => {
             onClick={() => navigate("/admin/notifications")}
             className="relative flex items-center justify-center flex-shrink-0 p-0.5 sm:p-1"
           >
-            <FaBell className="text-blue-700 w-3.5 h-3.5 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+            <FaBell className="text-blue-100 w-3.5 h-3.5 sm:w-5 sm:h-5 md:w-6 md:h-6" />
             {adminNotificationCount > 0 && (
               <span
                 className="

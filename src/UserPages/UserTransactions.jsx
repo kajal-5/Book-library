@@ -114,7 +114,7 @@ const UserTransactions = () => {
     <div className="min-h-screen bg-gradient-to-br from-violet-300 via-purple-300 to-pink-400">
       <Nav />
       
-      <div className="container mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
+      <div className="container mx-auto px-3 sm:px-4 md:px-25 py-4 sm:py-6 md:py-8">
         {/* <h1 className="text-2xl sm:text-2xl md:text-3xl font-bold text-white mb-4 sm:mb-6">Transaction History</h1> */}
 
         {/* Summary Cards */}
@@ -163,14 +163,15 @@ const UserTransactions = () => {
         </div> */}
 
         {/* Filter Buttons */}
-        <div className="bg-gradient-to-r from-pink-200 via-pink-100 to-purple-300 rounded-xl shadow-lg p-3 sm:p-4 mb-4 sm:mb-6">
+        <div className="bg-gradient-to-br from-pink-100 via-pink-100 to-purple-100 rounded-xl shadow-lg p-3 sm:p-4 mb-4 sm:mb-6">
+        {/* <div className="bg-white rounded-xl shadow-lg p-3 sm:p-4 mb-4 sm:mb-6"> */}
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setFilter("all")}
               className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
                 filter === "all"
-                  ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  ? "bg-gradient-to-r from-blue-800 to-indigo-600 text-white shadow-md"
+                  : "bg-gradient-to-r from-blue-300 to-indigo-600 text-white  hover:from-rose-400 hover:to-purple-600"
               }`}
             >
               All Transactions
@@ -179,8 +180,8 @@ const UserTransactions = () => {
               onClick={() => setFilter("purchase")}
               className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
                 filter === "purchase"
-                  ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  ? "bg-gradient-to-br from-blue-800 to-indigo-600 text-white shadow-md"
+                  : "bg-gradient-to-r from-sky-300 to-indigo-600 text-white  hover:from-pink-400 hover:to-purple-600"
               }`}
             >
               Purchases
@@ -189,8 +190,8 @@ const UserTransactions = () => {
               onClick={() => setFilter("rent")}
               className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
                 filter === "rent"
-                  ? "bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-md"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  ? "bg-gradient-to-r from-blue-800 to-indigo-600 text-white shadow-md"
+                  : "bg-gradient-to-r from-sky-300 to-indigo-600 text-white  hover:from-rose-400 hover:to-purple-600"
               }`}
             >
               Rentals
@@ -200,7 +201,7 @@ const UserTransactions = () => {
               className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
                 filter === "security"
                   ? "bg-gradient-to-r from-yellow-500 to-green-600 text-white shadow-md"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  : "bg-gradient-to-r from-blue-300 to-indigo-600 text-white  hover:from-rose-400 hover:to-purple-600"
               }`}
             >
               Security Deposits
@@ -209,7 +210,7 @@ const UserTransactions = () => {
         </div>
 
         {/* Transactions List */}
-        <div className="bg-white rounded-2xl shadow-lg bg-gradient-to-r from-pink-200 via-pink-200 to-purple-200 p-5">
+        <div className="bg-white rounded-2xl shadow-lg bg-gradient-to-br from-purple-200 via-pink-200 to-purple-200 p-5">
           {filteredTransactions.length === 0 ? (
             <div className="p-10 text-center">
               <svg className="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -219,7 +220,7 @@ const UserTransactions = () => {
               <p className="text-gray-500">Start purchasing or renting books to see your transaction history.</p>
             </div>
           ) : (
-            <div className="divide-y divide-gray-200">
+            <div className="divide-y divide-gray-300">
               {filteredTransactions.map((transaction, index) => (
                 <div
                   key={transaction.id}

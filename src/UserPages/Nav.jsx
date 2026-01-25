@@ -72,7 +72,7 @@ const Nav = ({ searchQuery: propSearchQuery, setSearchQuery: propSetSearchQuery 
   }, [storeToken]);
   
   return (
-    <nav className="w-full bg-gradient-to-r from-indigo-500 via-cyan-400  to-indigo-400 px-2 sm:px-3 md:px-6 py-3 sm:py-4 shadow-lg">
+    <nav className="w-full bg-gradient-to-r from-indigo-600 via-cyan-500  to-indigo-600 px-2 sm:px-3 md:px-6 py-3 sm:py-4 shadow-lg">
       {/* MAIN ROW */}
       <div className="flex items-center justify-between gap-0.5 sm:gap-1 md:gap-4">
         {/* LOGO – flexible */}
@@ -154,7 +154,7 @@ const Nav = ({ searchQuery: propSearchQuery, setSearchQuery: propSetSearchQuery 
             onClick={() => navigate("/user/notifications")}
             className="relative flex items-center justify-center flex-shrink-0 p-0.5 sm:p-1"
           >
-            <FaBell className="text-blue-700 w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />
+            <FaBell className="text-white w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />
             {notificationCount > 0 && (
               <span
                 className="
@@ -181,7 +181,7 @@ const Nav = ({ searchQuery: propSearchQuery, setSearchQuery: propSetSearchQuery 
             onClick={() => navigate("/user/cart")}
             className="relative flex items-center justify-center flex-shrink-0 p-0.5 sm:p-1"
           >
-            <BsCartCheckFill className="text-blue-700 w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />
+            <BsCartCheckFill className="text-indigo-100 w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />
             {cartCount > 0 && (
               <span
                 className="

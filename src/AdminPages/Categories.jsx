@@ -32,7 +32,7 @@ const Categories = ({ selectedCategory = "All", setSelectedCategory = () => {} }
 
   return (
     <div className="w-full bg-gradient-to-r from-red-400 via-purple-500 to-pink-500 px-3 py-3 md:py-5 shadow-md">
-      <div className="overflow-x-auto">
+      {/* <div className="overflow-x-auto"> */}
         <div className="flex gap-3 md:gap-4 justify-start lg:justify-center pb-2 md:pb-0">
           {categories.map((item) => (
             <button
@@ -57,7 +57,7 @@ const Categories = ({ selectedCategory = "All", setSelectedCategory = () => {} }
             </button>
           ))}
         </div>
-      </div>
+      {/* </div> */}
     </div>
   );
 };

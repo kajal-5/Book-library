@@ -96,7 +96,7 @@ const DropBook = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-200 to-pink-500 flex flex-col relative">
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-300 to-pink-600 flex flex-col relative">
       {/* Background Image with Opacity */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
@@ -109,8 +109,8 @@ const DropBook = () => {
       <div className="flex-1 flex justify-center items-center p-3 sm:p-4 md:p-6 relative z-10">
       <div className="w-full max-w-5xl min-h-[55vh] rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 flex flex-col md:flex-row gap-4 sm:gap-6 md:gap-8 bg-indigo-100 backdrop-blur-sm">
         {/* ================= FORM ================= */}
-        <form onSubmit={handleSubmit} className="md:w-[60%] bg-gradient-to-br from-blue-300 to-purple-400 rounded-xl p-4 sm:p-5 md:p-6 shadow-lg">
-          <h2 className="text-xl sm:text-2xl py-2 sm:py-3 font-bold text-gray-800 text-center mb-3 sm:mb-4 bg-gradient-to-br from-purple-600 to-pink-600 bg-clip-text text-transparent">Drop a Book</h2>
+        <form onSubmit={handleSubmit} className="md:w-[60%] bg-gradient-to-br from-blue-300 to-purple-500 rounded-xl p-4 sm:p-5 md:p-6 shadow-lg">
+          <h2 className="text-xl sm:text-2xl py-2 sm:py-3 font-bold text-gray-900 text-center mb-3 sm:mb-4 bg-gradient-to-br from-purple-600 to-pink-600 bg-clip-text text-transparent">Drop a Book</h2>
           <div className="space-y-3 sm:space-y-4">
             <input 
               type="text" 
@@ -118,7 +118,7 @@ const DropBook = () => {
               placeholder="Book Name" 
               value={form.name} 
               onChange={handleChange} 
-              className="w-full border-2 border-gray-300 rounded-lg px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" 
+              className="w-full border-2 border-gray-300 rounded-lg px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-transparent transition-all" 
               required 
             />
             <textarea 
@@ -127,13 +127,13 @@ const DropBook = () => {
               value={form.description} 
               onChange={handleChange} 
               rows={2}
-              className="w-full border-2 border-gray-300 rounded-lg px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none" 
+              className="w-full border-2 border-gray-300 rounded-lg px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-transparent transition-all resize-none" 
             />
             <select
               name="type"
               value={showCustomInput ? "Other" : form.type}
               onChange={handleChange}
-              className="w-full border-2 border-gray-300 rounded-lg px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              className="w-full border-2 border-gray-300 rounded-lg px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-transparent transition-all"
               required
             >
               <option value="">Select Category</option>
@@ -160,7 +160,7 @@ const DropBook = () => {
                 placeholder="Enter custom category" 
                 value={customCategory} 
                 onChange={(e) => setCustomCategory(e.target.value)} 
-                className="w-full border-2 border-gray-300 rounded-lg px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" 
+                className="w-full border-2 border-gray-300 rounded-lg px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-transparent transition-all" 
                 required 
               />
             )}
@@ -171,7 +171,7 @@ const DropBook = () => {
                 placeholder="MRP Price" 
                 value={form.mrpPrice} 
                 onChange={handleChange} 
-                className="w-full border-2 border-gray-300 rounded-lg px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" 
+                className="w-full border-2 border-gray-300 rounded-lg px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-transparent transition-all" 
                 min={50} 
                 required 
               />
@@ -181,7 +181,7 @@ const DropBook = () => {
                 placeholder="Quantity" 
                 value={form.quantity} 
                 onChange={handleChange} 
-                className="w-full border-2 border-gray-300 rounded-lg px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" 
+                className="w-full border-2 border-gray-300 rounded-lg px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-transparent transition-all" 
                 min={1} 
                 required 
               />
@@ -196,13 +196,13 @@ const DropBook = () => {
               placeholder="Image URL" 
               value={form.imageUrl} 
               onChange={handleChange} 
-              className="w-full border-2 border-gray-300 rounded-lg px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" 
+              className="w-full border-2 border-gray-300 rounded-lg px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-transparent transition-all" 
               required 
             />
             <div className="flex justify-between mt-3 sm:mt-4">
               <button 
                 type="button" 
-                className="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-4 sm:px-5 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold hover:from-gray-600 hover:to-gray-700 transition-all duration-200 shadow-md hover:shadow-lg" 
+                className="bg-gradient-to-r from-gray-500 to-gray-700 text-white px-4 sm:px-5 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold hover:from-gray-600 hover:to-gray-700 transition-all duration-200 shadow-md hover:shadow-lg" 
                 onClick={handleCancel}
               >
                 Cancel
@@ -210,7 +210,7 @@ const DropBook = () => {
               <button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-5 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-gradient-to-r from-blue-600 to-purple-800 text-white px-4 sm:px-5 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? "Submitting..." : "Submit Request"}
               </button>
@@ -218,7 +218,7 @@ const DropBook = () => {
           </div>
         </form>
         {/* ================= PREVIEW CARD ================= */}
-        <div className="md:w-[40%] flex flex-col items-center justify-center bg-gradient-to-br from-purple-200 to-pink-200 rounded-xl p-4 sm:p-5 md:p-6 shadow-lg">
+        <div className="md:w-[40%] flex flex-col items-center justify-center bg-gradient-to-br from-purple-300 to-pink-300 rounded-xl p-4 sm:p-5 md:p-6 shadow-lg">
           <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Preview</h2>
           <div className="w-52 h-72 sm:w-60 sm:h-80 md:w-64 md:h-80 bg-white rounded-lg shadow-xl overflow-hidden border-2 border-gray-200">
             {form.imageUrl ? (

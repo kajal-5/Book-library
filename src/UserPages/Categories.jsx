@@ -18,8 +18,8 @@ const categories = [
 const Categories = ({ selectedCategory = "All", setSelectedCategory = () => {} }) => {
   return (
     // <div className="w-full bg-gradient-to-br from-teal-200 via-cyan-300 to-sky-300 px-3 py-3 md:py-5 shadow-md">
-      <div className="w-full bg-gradient-to-r from-cyan-400 via-sky-400 to-teal-400 py-3 md:py-5 shadow-md">
-      <div className="user-category-scroll overflow-x-scroll">
+      <div className="w-full bg-gradient-to-r from-cyan-500 via-sky-400 to-teal-500 py-3 md:py-5 shadow-md">
+      {/* <div className="user-category-scroll overflow-x-scroll"> */}
         <div className="flex gap-3 md:gap-4 justify-start lg:justify-center pb-2 md:pb-0">
           {categories.map((item) => (
             <button
@@ -44,7 +44,7 @@ const Categories = ({ selectedCategory = "All", setSelectedCategory = () => {} }
             </button>
           ))}
         </div>
-      </div>
+      {/* </div> */}
     </div>
   );
 };
