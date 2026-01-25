@@ -61,5 +61,43 @@ A modern, full-stack book rental management system with automated notifications,
 - **REST API Architecture** - Custom API layer over Firebase
 
 ---
+## Installation
 
+### Prerequisites
+- **Node.js** (v16 or higher)
+- **npm** or **yarn**
+- **Firebase Account** (for database)
+
+### Step 1: Clone the Repository
+```bash
+git clone <your-repository-url>
+cd book-library
+```
+
+### Step 2: Install Dependencies
+```bash
+npm install
+# or
+yarn install
+```
+
+### Step 3: Firebase Configuration
+1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
+2. Enable **Realtime Database** and **Authentication**
+3. Update Firebase credentials in:
+   - `src/APIs/LoginAPi.jsx` (FIREBASE_API_KEY, DB_BASE_URL)
+   - `src/APIs/BookAPicall.jsx` (DB_BASE_URL)
+   - `src/APIs/RequestAPi.jsx` (DB_BASE_URL)
+   - `src/APIs/TransactionAPI.jsx` (DB_BASE_URL)
+
+### Step 4: Run Development Server
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+The application will be available at `http://localhost:5173`
+
+---
 </div>
