@@ -174,66 +174,6 @@ const AdminTransactions = () => {
           <Nav onMenuClick={() => setSidebarOpen(true)} />
           
           <div className="flex-1 overflow-y-auto p-3 md:px-30 md:pt-10 pt-5">
-          {/* <h1 className="text-2xl sm:text-3xl font-bold text-white mb-4 sm:mb-6">All Transactions</h1> */}
-
-          {/* Summary Cards */}
-          {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-500 text-sm">Total Transactions</p>
-                  <h3 className="text-3xl font-bold text-gray-800">{transactions.length}</h3>
-                </div>
-                <div className="bg-blue-100 p-3 rounded-full">
-                  <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-500 text-sm">Total Revenue</p>
-                  <h3 className="text-3xl font-bold text-green-600">₹{totalRevenue.toFixed(2)}</h3>
-                </div>
-                <div className="bg-green-100 p-3 rounded-full">
-                  <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-500 text-sm">Security Held</p>
-                  <h3 className="text-3xl font-bold text-yellow-600">₹{netSecurityHeld.toFixed(2)}</h3>
-                </div>
-                <div className="bg-yellow-100 p-3 rounded-full">
-                  <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-500 text-sm">Total Refunded</p>
-                  <h3 className="text-3xl font-bold text-blue-600">₹{totalRefunded.toFixed(2)}</h3>
-                </div>
-                <div className="bg-blue-100 p-3 rounded-full">
-                  <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div> */}
 
           {/* Search and Filter */}
           <div className="bg-white rounded-xl shadow-lg p-10  mb-6">
