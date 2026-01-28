@@ -115,52 +115,6 @@ const UserTransactions = () => {
       <Nav />
       
       <div className="container mx-auto px-3 sm:px-4 md:px-25 py-4 sm:py-6 md:py-8">
-        {/* <h1 className="text-2xl sm:text-2xl md:text-3xl font-bold text-white mb-4 sm:mb-6">Transaction History</h1> */}
-
-        {/* Summary Cards */}
-        {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
-          <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-500 text-xs sm:text-sm">Total Transactions</p>
-                <h3 className="text-2xl sm:text-3xl font-bold text-gray-800">{transactions.length}</h3>
-              </div>
-              <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
-                <svg className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-500 text-xs sm:text-sm">Total Spent</p>
-                <h3 className="text-2xl sm:text-3xl font-bold text-red-600">₹{totalSpent.toFixed(2)}</h3>
-              </div>
-              <div className="bg-red-100 p-2 sm:p-3 rounded-full">
-                <svg className="w-6 h-6 sm:w-8 sm:h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-500 text-xs sm:text-sm">Total Refunded</p>
-                <h3 className="text-2xl sm:text-3xl font-bold text-green-600">₹{totalRefunded.toFixed(2)}</h3>
-              </div>
-              <div className="bg-green-100 p-2 sm:p-3 rounded-full">
-                <svg className="w-6 h-6 sm:w-8 sm:h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div> */}
 
         {/* Filter Buttons */}
         <div className="bg-gradient-to-br from-pink-100 via-pink-100 to-purple-100 rounded-xl shadow-lg p-3 sm:p-4 mb-4 sm:mb-6">

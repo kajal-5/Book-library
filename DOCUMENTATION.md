@@ -72,11 +72,11 @@ User/Admin → Login → Authentication → Role Check → Dashboard
    - Stores user data in `/users/{emailKey}`:
      ```json
      {
-       "email": "user@example.com",
-       "name": "John Doe",
+       "email": "mohan@example.com",
+       "name": "Mohan",
        "role": "user",
        "contactNo": "1234567890",
-       "address": "123 Main St",
+       "address": "123 Delhi",
        "createdAt": "2026-01-23T10:30:00.000Z"
      }
      ```

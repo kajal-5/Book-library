@@ -28,7 +28,7 @@ const BookCard = ({ book }) => {
 
   return (
     <>
-    <div className="bg-white rounded-xl shadow-lg border-2 sm:border-4 border-gray-200 md:hover:scale-x-120 md:hover:scale-y-115  hover:scale-120 transition duration-300 overflow-hidden">
+    <div className="bg-white rounded-xl shadow-lg border-2 sm:border-4 border-gray-200 md:hover:scale-x-120 md:hover:scale-y-110  hover:scale-120 transition duration-300 overflow-hidden">
       {book.imageUrl ? (
         <img
           src={book.imageUrl}
@@ -46,7 +46,9 @@ const BookCard = ({ book }) => {
         {book.description && (
           <p className="text-[9px] sm:text-[10px] text-gray-500 mt-1 line-clamp-2">{book.description}</p>
         )}
-        <p className="text-xs sm:text-sm text-gray-600 mt-1 sm:mt-2">{book.type}</p>
+        <p className="text-xs sm:text-sm text-gray-600 mt-1 md:mt-0">{book.type}</p>
+        <div className="flex items-center justify-between mt-1">
+              <p className="text-lg font-bold text-green-600">₹ {book.price}</p>
         {book.quantity && (
           <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs text-gray-700 mt-1">
             <svg className="w-3 h-3 sm:w-4 sm:h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -55,7 +57,8 @@ const BookCard = ({ book }) => {
             <span className="font-medium">Quantity: {book.quantity}</span>
           </div>
         )}
-        <p className="font-semibold text-sm sm:text-base mt-1">₹ {book.price}</p>
+        </div>
+
         {book.contactName && (
           <p className="text-[10px] sm:text-xs text-gray-600 mt-1">Contact: {book.contactName}</p>
         )}
