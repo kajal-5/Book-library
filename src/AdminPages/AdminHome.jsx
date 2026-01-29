@@ -1,9 +1,7 @@
 import Nav from "./Nav";
 import Categories from "./Categories";
-// import SpaceBar from "./SpaceBar";
-// import AddBook from "./AddBook/AddBook";
 import BookCard from "./Cards/BooksCard";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBooks } from "../Store/BookSlice";
 import { setAdminNotificationCount, validateToken } from "../Store/authSlice";
