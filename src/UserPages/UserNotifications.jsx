@@ -38,7 +38,6 @@ const UserNotifications = () => {
     <div className="min-h-screen bg-gradient-to-br from-violet-300 via-purple-300 to-pink-400">
       <Nav />
       <div className="md:pt-16 md:px-10 ">
-        {/* <h1 className="text-3xl font-bold text-white mb-6">Notifications</h1> */}
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-white"></div>
