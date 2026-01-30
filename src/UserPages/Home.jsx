@@ -3,7 +3,7 @@
 import Nav from "./Nav";
 import Categories from "./Categories";
 import BookCard from "./Cards/UserBookCards";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBooks } from "../Store/BookSlice";
 import { loadCartFromFirebase } from "../Store/CartSlice";
@@ -126,7 +126,7 @@ const UserHome = () => {
       <Categories selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
   
  
-      <div className="px-12 py-15 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-x-5 gap-y-15">
+      <div className="px-12 py-15 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-5 gap-y-15">
         {filteredBooks.length > 0 ? (
           filteredBooks.map((book) => (
             <BookCard key={book.id} book={book} />

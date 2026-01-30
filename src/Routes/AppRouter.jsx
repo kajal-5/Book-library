@@ -12,7 +12,7 @@ import DropBook from "../UserPages/DropBook";
 import UserNotifications from "../UserPages/UserNotifications";
 import Cart from "../UserPages/Cart";
 import MyRentals from "../UserPages/MyRentals";
-import RentAgain from "../UserPages/RentAgain";
+// import RentAgain from "../UserPages/RentAgain";
 import UserTransactions from "../UserPages/UserTransactions";
 import AdminHome from "../AdminPages/AdminHome";
 import AddBook from "../AdminPages/AddBook/AddBook";
@@ -59,7 +59,7 @@ const AppRoutes = () => {
           <Route path="/user/notifications" element={<UserNotifications />} />
           <Route path="/user/cart" element={<Cart />} />
           <Route path="/user/rentals" element={<MyRentals />} />
-          <Route path="/rent-again" element={<RentAgain />} />
+          {/* <Route path="/rent-again" element={<RentAgain />} /> */}
           <Route path="/my-rentals" element={<MyRentals />} />
           <Route path="/user/transactions" element={<UserTransactions />} />
           {/* future user pages */}
