@@ -118,7 +118,6 @@ const UserTransactions = () => {
 
         {/* Filter Buttons */}
         <div className="bg-gradient-to-br from-pink-100 via-pink-100 to-purple-100 rounded-xl shadow-lg p-3 sm:p-4 mb-4 sm:mb-6">
-        {/* <div className="bg-white rounded-xl shadow-lg p-3 sm:p-4 mb-4 sm:mb-6"> */}
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setFilter("all")}
