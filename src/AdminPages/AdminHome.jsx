@@ -38,7 +38,8 @@ const AdminHome = () => {
 
   // Filter books based on category and search query
   const filteredBooks = useMemo(() => {
-    const filteredBooks = books.filter((book) => {
+    // const filteredBooks = books.filter((book) => {
+    return books.filter((book) => {
       // Category filter
       let categoryMatch = true;
       if (selectedCategory !== "All") {
@@ -69,11 +70,9 @@ const AdminHome = () => {
 
   useEffect(() => {
     dispatch(fetchBooks());
-    console.log("Filtered Books:up");
-
     const interval = setInterval(() => {
       dispatch(fetchBooks());
-      console.log("Filtered Books: down");
+      // console.log("Filtered Books: down");
     }, 5000);
 
     return () => clearInterval(interval);
@@ -82,11 +81,8 @@ const AdminHome = () => {
   // Fetch pending requests count for admin notifications
   useEffect(() => {
     dispatch(fetchDropRequests());
-          console.log("Filtered Books: up");
-
     const interval = setInterval(() => {
       dispatch(fetchDropRequests());
-            console.log("Filtered Books: down");
     }, 5000);
 
     return () => clearInterval(interval);
