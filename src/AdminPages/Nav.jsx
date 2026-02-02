@@ -89,11 +89,11 @@ const Nav = ({ onMenuClick }) => {
     window.addEventListener("storage", handleStorageChange);
 
     // Check periodically (every 2 seconds)
-    const interval = setInterval(checkTokenIntegrity, 2000);
+    // const interval = setInterval(checkTokenIntegrity, 2000);
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
-      clearInterval(interval);
+      // clearInterval(interval);
     };
   }, [storeToken]);
 
