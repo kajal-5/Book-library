@@ -28,7 +28,7 @@ const BookCard = ({ book }) => {
 
   return (
     <>
-    <div className="bg-white rounded-xl shadow-lg border-2 sm:border-4 border-gray-200 md:hover:scale-x-120 md:hover:scale-y-110  hover:scale-120 transition duration-300 overflow-hidden">
+    <div className="bg-white rounded-xl shadow-lg border-2 sm:border-4 border-gray-200 md:hover:scale-x-115 md:hover:scale-y-110  hover:scale-115 transition duration-300 overflow-hidden">
       {book.imageUrl ? (
         <img
           src={book.imageUrl}
@@ -48,8 +48,8 @@ const BookCard = ({ book }) => {
         )}
         <p className="text-xs sm:text-sm text-gray-600 mt-1 md:mt-0">{book.type}</p>
         <div className="flex items-center justify-between mt-1">
-              <p className="text-lg font-bold text-green-600">₹ {book.price}</p>
-        {book.quantity && (
+              <p className="text-lg font-bold text-green-600">₹ {Number(book.price) || 0}</p>
+        {book.quantity !== undefined && book.quantity !== null && (
           <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs text-gray-700 mt-1">
             <svg className="w-3 h-3 sm:w-4 sm:h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
