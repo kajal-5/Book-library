@@ -18,7 +18,7 @@ import AdminHome from "../AdminPages/AdminHome";
 import AddBook from "../AdminPages/AddBook/AddBook";
 import AdminRequests from "../AdminPages/AdminRequests";
 import AdminNotifications from "../AdminPages/AdminNotifications";
-import AdminProfile from "../AdminPages/AdminProfile";
+// import AdminProfile from "../AdminPages/AdminProfile";
 import AdminTransactions from "../AdminPages/AdminTransactions";
 
 const AppRoutes = () => {
@@ -71,7 +71,7 @@ const AppRoutes = () => {
         <>
           <Route path="/admin" element={<AdminHome />} />
           <Route path="/admin/category/:categoryName" element={<AdminHome />} />
-          <Route path="/admin/profile" element={<AdminProfile />} />
+          {/* <Route path="/admin/profile" element={<AdminProfile />} /> */}
           <Route path="/admin/add-book" element={<AddBook />} />
           <Route path="/admin/requests" element={<AdminRequests />} />
           <Route path="/admin/notifications" element={<AdminNotifications />} />

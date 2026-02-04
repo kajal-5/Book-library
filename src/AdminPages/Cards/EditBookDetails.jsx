@@ -213,7 +213,7 @@ const EditBookDetails = ({ book, isOpen, onClose }) => {
                 <option value="Spiritual">Spiritual</option>
                 <option value="History">History</option>
                 <option value="Biography">Biography</option>
-                <option value="Short Stories">Short Stories</option>
+                <option value="Stories">Short Stories</option>
                 <option value="Art & Design">Art & Design</option>
                 <option value="Travel">Travel</option>
                 <option value="Wellness">Wellness</option>

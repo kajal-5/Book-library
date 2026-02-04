@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { setAdminNotificationCount } from "../Store/authSlice";
 import { getAllTransactions } from "../APIs/TransactionAPI";
 import Nav from "./Nav";
-import SpaceBar from "./SpaceBar";
+// import SpaceBar from "./SpaceBar";
 
 const AdminTransactions = () => {
   const dispatch = useDispatch();
@@ -155,7 +155,7 @@ const AdminTransactions = () => {
   if (loading) {
     return (
       <div className="flex h-screen bg-gradient-to-br from-rose-300 via-pink-300 to-red-400">
-        <SpaceBar />
+        {/* <SpaceBar /> */}
         <div className="flex-1 flex flex-col">
           <Nav />
           <div className="flex-1 flex justify-center items-center">
