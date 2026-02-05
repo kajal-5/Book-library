@@ -17,7 +17,7 @@ const AdminRequests = () => {
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [rejectReason, setRejectReason] = useState("");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  // const [sidebarOpen, setSidebarOpen] = useState(false);
   const [processingIds, setProcessingIds] = useState(new Set());
   const [processedStatusMap, setProcessedStatusMap] = useState(new Map()); // Track processed requests
 

@@ -11,7 +11,7 @@ const AdminTransactions = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  // const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -81,24 +81,24 @@ const AdminTransactions = () => {
     }
   };
 
-  const getTransactionColor = (type) => {
-    switch (type) {
-      case "purchase":
-      case "cart_purchase":
-        return "from-blue-100 to-blue-50";
-      case "rent":
-      case "cart_rent":
-        return "from-purple-100 to-purple-50";
-      case "security_deposit":
-        return "from-yellow-100 to-yellow-50";
-      case "security_refund":
-        return "from-green-100 to-green-50";
-      case "book_drop":
-        return "from-emerald-100 to-emerald-50";
-      default:
-        return "from-gray-100 to-gray-50";
-    }
-  };
+  // const getTransactionColor = (type) => {
+  //   switch (type) {
+  //     case "purchase":
+  //     case "cart_purchase":
+  //       return "from-blue-100 to-blue-50";
+  //     case "rent":
+  //     case "cart_rent":
+  //       return "from-purple-100 to-purple-50";
+  //     case "security_deposit":
+  //       return "from-yellow-100 to-yellow-50";
+  //     case "security_refund":
+  //       return "from-green-100 to-green-50";
+  //     case "book_drop":
+  //       return "from-emerald-100 to-emerald-50";
+  //     default:
+  //       return "from-gray-100 to-gray-50";
+  //   }
+  // };
 
   const getTransactionType = (type) => {
     switch (type) {
@@ -138,19 +138,19 @@ const AdminTransactions = () => {
   });
 
   // Calculate statistics
-  const totalRevenue = transactions
-    .filter((t) => t.type === "purchase" || t.type === "cart_purchase" || t.type === "rent" || t.type === "cart_rent")
-    .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+  // const totalRevenue = transactions
+  //   .filter((t) => t.type === "purchase" || t.type === "cart_purchase" || t.type === "rent" || t.type === "cart_rent")
+  //   .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
 
-  const totalSecurityHeld = transactions
-    .filter((t) => t.type === "security_deposit")
-    .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+  // const totalSecurityHeld = transactions
+  //   .filter((t) => t.type === "security_deposit")
+  //   .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
 
-  const totalRefunded = transactions
-    .filter((t) => t.type === "security_refund")
-    .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+  // const totalRefunded = transactions
+  //   .filter((t) => t.type === "security_refund")
+  //   .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
 
-  const netSecurityHeld = totalSecurityHeld - totalRefunded;
+  // const netSecurityHeld = totalSecurityHeld - totalRefunded;
 
   if (loading) {
     return (
