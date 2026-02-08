@@ -15,6 +15,7 @@ const AdminNotifications = () => {
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [rejectReason, setRejectReason] = useState("");
+  const [isSubmittingReject, setIsSubmittingReject] = useState(false);
   const [processedIds, setProcessedIds] = useState(new Map()); // Track processed requests with their status
   const [processingIds, setProcessingIds] = useState(new Set()); // Track currently processing requests
 

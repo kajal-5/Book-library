@@ -18,6 +18,7 @@ const AdminRequests = () => {
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [rejectReason, setRejectReason] = useState("");
   // const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isSubmittingReject, setIsSubmittingReject] = useState(false);
   const [processingIds, setProcessingIds] = useState(new Set());
   const [processedStatusMap, setProcessedStatusMap] = useState(new Map()); // Track processed requests
 
