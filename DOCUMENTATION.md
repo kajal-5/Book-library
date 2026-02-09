@@ -1984,6 +1984,5 @@ describe('LoginPage', () => {
 
 This documentation covers the complete technical implementation of the Book Library Rental Management System. For additional support or questions, please refer to the [RENTAL_SYSTEM_GUIDE.md](RENTAL_SYSTEM_GUIDE.md) or contact the development team.
 
-**Last Updated:** January 23, 2026  
-**Version:** 1.0.0  
-**Maintainer:** Himans SR
+
+
