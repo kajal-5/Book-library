@@ -57,6 +57,7 @@ const UserTransactions = () => {
   //       return "from-gray-100 to-gray-50";
   //   }
   // };
+  
 
   const getTransactionType = (type) => {
     switch (type) {

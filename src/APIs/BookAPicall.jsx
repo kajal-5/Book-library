@@ -2,7 +2,7 @@ const DB_BASE_URL =
   "https://book-app-339c8-default-rtdb.firebaseio.com";
 
 /* =========================
-   HELPER → BOOK KEY
+   BOOK KEY
 ========================= */
 const bookNameToKey = (name) =>
   name.trim().toLowerCase().replace(/\s+/g, "-");
@@ -55,7 +55,7 @@ export const getAllBooksApi = async () => {
   const data = await response.json();
   if (!data) return [];
 
-  // 🔁 convert object → array
+  //  convert object → array
   return Object.keys(data).map((key) => ({
     id: key,
     ...data[key],

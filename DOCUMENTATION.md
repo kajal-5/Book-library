@@ -85,31 +85,6 @@ User/Admin → Login → Authentication → Role Check → Dashboard
    - Stores `token`, `email`, `role` in localStorage
    - Token used for authenticated requests
 
-#### Code Example:
-```javascript
-export const signupApi = async (email, password, name, contactNo, address) => {
-  // Validation
-  if (!/^\d{10}$/.test(trimmedContactNo)) {
-    throw new Error("Contact number must be exactly 10 digits");
-  }
-
-  // Firebase Auth
-  const authResponse = await fetch(
-    `${AUTH_BASE_URL}/accounts:signUp?key=${FIREBASE_API_KEY}`,
-    {
-      method: "POST",
-      body: JSON.stringify({ email, password, returnSecureToken: true })
-    }
-  );
-
-  // Store user data
-  const userKey = emailToKey(email);
-  await fetch(`${DB_BASE_URL}/users/${userKey}.json`, {
-    method: "PUT",
-    body: JSON.stringify({ email, name, role: "user", contactNo, address })
-  });
-};
-```
 
 ### 2. Login Flow
 
@@ -137,26 +112,6 @@ export const signupApi = async (email, password, name, contactNo, address) => {
 #### File: `src/Store/authSlice.jsx` - `checkAuth()`
 
 **Token Refresh Logic:**
-```javascript
-export const checkAuth = createAsyncThunk("auth/checkAuth", async () => {
-  const token = localStorage.getItem("token");
-  
-  // Validate token with Firebase
-  const response = await validateTokenApi(token);
-  
-  if (response.valid) {
-    return { 
-      isAuthenticated: true, 
-      email: localStorage.getItem("email"),
-      role: localStorage.getItem("role")
-    };
-  } else {
-    // Token expired - clear session
-    localStorage.clear();
-    throw new Error("Session expired");
-  }
-});
-```
 
 **Auto-Refresh Strategy:**
 - Token validated on app load
@@ -168,25 +123,6 @@ export const checkAuth = createAsyncThunk("auth/checkAuth", async () => {
 #### File: `src/Routes/AppRouter.jsx`
 
 **Protected Routes:**
-```javascript
-// Admin-only routes
-{isAuthenticated && role === "admin" && (
-  <>
-    <Route path="/admin" element={<AdminHome />} />
-    <Route path="/admin/add-book" element={<AddBook />} />
-    {/* More admin routes */}
-  </>
-)}
-
-// User-only routes
-{isAuthenticated && role === "user" && (
-  <>
-    <Route path="/user" element={<UserHome />} />
-    <Route path="/user/cart" element={<Cart />} />
-    {/* More user routes */}
-  </>
-)}
-```
 
 ---
 
@@ -230,23 +166,6 @@ const store = configureStore({
 - `setNotificationCount()` - Update notification badge
 - `validateToken()` - Check token validity
 
-**Usage Example:**
-```javascript
-import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../Store/authSlice';
-
-const LoginComponent = () => {
-  const dispatch = useDispatch();
-  const { loading, error } = useSelector(state => state.auth);
-
-  const handleLogin = async (email, password) => {
-    const result = await dispatch(login({ email, password }));
-    if (result.meta.requestStatus === 'fulfilled') {
-      // Login successful
-    }
-  };
-};
-```
 
 ### 2. Books Slice (`BookSlice.jsx`)
 
@@ -349,307 +268,34 @@ const calculateRentalCost = (book, startDate, endDate) => {
 ### 1. Book API (`BookAPicall.jsx`)
 
 #### Get All Books
-```javascript
-export const getAllBooksApi = async () => {
-  const response = await fetch(`${DB_BASE_URL}/books.json`);
-  const data = await response.json();
-  
-  if (!data) return [];
-  
-  return Object.entries(data).map(([id, book]) => ({
-    id,
-    ...book
-  }));
-};
-```
+
 
 #### Add Book (Admin Only)
-```javascript
-export const addBookApi = async (bookData) => {
-  const { name, description, type, price, quantity, imageUrl } = bookData;
-  
-  // Convert book name to URL-safe key
-  const bookKey = name.trim().toLowerCase().replace(/\s+/g, "-");
-  
-  const saveBook = {
-    name: name.trim(),
-    description: description || "",
-    type: type || "",
-    price: Number(price),
-    quantity: Number(quantity),
-    imageUrl,
-    createdAt: new Date().toISOString()
-  };
-  
-  const response = await fetch(
-    `${DB_BASE_URL}/books/${bookKey}.json`,
-    {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(saveBook)
-    }
-  );
-  
-  if (!response.ok) throw new Error("Failed to add book");
-  
-  return { id: bookKey, ...saveBook };
-};
-```
-
 #### Update Book
-```javascript
-export const updateBookApi = async (bookId, updates) => {
-  const response = await fetch(
-    `${DB_BASE_URL}/books/${bookId}.json`,
-    {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updates)
-    }
-  );
-  
-  if (!response.ok) throw new Error("Failed to update book");
-  
-  return { id: bookId, ...updates };
-};
-```
-
 #### Delete Book
-```javascript
-export const deleteBookApi = async (bookId) => {
-  const response = await fetch(
-    `${DB_BASE_URL}/books/${bookId}.json`,
-    { method: "DELETE" }
-  );
-  
-  if (!response.ok) throw new Error("Failed to delete book");
-  
-  return bookId;
-};
-```
+
 
 ### 2. Request API (`RequestAPi.jsx`)
 
 #### Create Drop Request
-```javascript
-export const createDropRequestApi = async (requestData) => {
-  const { bookName, userEmail, userName, contactNo, message } = requestData;
-  
-  const request = {
-    bookName,
-    userEmail,
-    userName,
-    contactNo,
-    message: message || "",
-    status: "pending",
-    type: "drop_request",
-    createdAt: new Date().toISOString()
-  };
-  
-  const response = await fetch(
-    `${DB_BASE_URL}/adminNotifications.json`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request)
-    }
-  );
-  
-  const data = await response.json();
-  return { id: data.name, ...request };
-};
-```
 
 #### Get User Notifications
-```javascript
-export const getUserNotificationsApi = async (userEmail) => {
-  const response = await fetch(
-    `${DB_BASE_URL}/userNotifications/${emailToKey(userEmail)}.json`
-  );
-  
-  const data = await response.json();
-  
-  if (!data) return [];
-  
-  return Object.entries(data)
-    .map(([id, notification]) => ({ id, ...notification }))
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-};
-```
+
 
 ### 3. Transaction API (`TransactionAPI.jsx`)
 
 #### Save Transaction
-```javascript
-export const saveTransaction = async (transactionData) => {
-  const {
-    userEmail,
-    bookName,
-    type,        // "rental_fee", "security_deposit", "security_deposit_refund"
-    amount,
-    rentalId,
-    date
-  } = transactionData;
-  
-  const transaction = {
-    userEmail,
-    bookName,
-    type,
-    amount: Number(amount),
-    rentalId,
-    date: date || new Date().toISOString(),
-    status: "completed"
-  };
-  
-  const response = await fetch(
-    `${DB_BASE_URL}/transactions.json`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(transaction)
-    }
-  );
-  
-  const data = await response.json();
-  return { id: data.name, ...transaction };
-};
-```
+
 
 #### Create Rent Transaction
-```javascript
-export const createRentTransaction = async (rentalData) => {
-  const {
-    bookName,
-    userEmail,
-    startDate,
-    endDate,
-    rentalFee,
-    securityDeposit,
-    quantity
-  } = rentalData;
-  
-  // 1. Save rental record
-  const rental = {
-    bookName,
-    userEmail,
-    startDate,
-    endDate,
-    rentalFee: Number(rentalFee),
-    securityDeposit: Number(securityDeposit),
-    quantity: Number(quantity),
-    status: "active",
-    createdAt: new Date().toISOString()
-  };
-  
-  const rentalResponse = await fetch(
-    `${DB_BASE_URL}/rentBook.json`,
-    {
-      method: "POST",
-      body: JSON.stringify(rental)
-    }
-  );
-  
-  const rentalData = await rentalResponse.json();
-  const rentalId = rentalData.name;
-  
-  // 2. Save rental fee transaction
-  await saveTransaction({
-    userEmail,
-    bookName,
-    type: "rental_fee",
-    amount: rentalFee,
-    rentalId
-  });
-  
-  // 3. Update book quantity
-  const bookKey = bookName.toLowerCase().replace(/\s+/g, "-");
-  const bookResponse = await fetch(`${DB_BASE_URL}/books/${bookKey}.json`);
-  const book = await bookResponse.json();
-  
-  await fetch(`${DB_BASE_URL}/books/${bookKey}.json`, {
-    method: "PATCH",
-    body: JSON.stringify({
-      quantity: book.quantity - quantity
-    })
-  });
-  
-  return rentalId;
-};
-```
+
 
 ### 4. Rental Notification Service (`RentalNotificationService.jsx`)
 
 #### Check Rental Periods (Auto-runs hourly)
-```javascript
-export const checkRentalPeriods = async () => {
-  // 1. Fetch all active rentals
-  const response = await fetch(`${DB_BASE_URL}/rentBook.json`);
-  const rentals = await response.json();
-  
-  if (!rentals) return;
-  
-  const now = new Date();
-  const tomorrow = new Date(now);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  
-  for (const [rentalId, rental] of Object.entries(rentals)) {
-    if (rental.status !== "active") continue;
-    
-    const endDate = new Date(rental.endDate);
-    const daysUntilDue = Math.ceil((endDate - now) / (1000 * 60 * 60 * 24));
-    
-    // Send notification 1 day before
-    if (daysUntilDue === 1 && rental.status !== "one_day_reminder") {
-      await sendOneDayReminder(rental, rentalId);
-    }
-    
-    // Send notification on due date
-    if (daysUntilDue === 0 && rental.status !== "reminder_sent") {
-      await sendRentalReminder(rental, rentalId);
-    }
-    
-    // Mark as overdue if past due date
-    if (daysUntilDue < 0 && rental.status !== "overdue") {
-      await markAsOverdue(rental, rentalId);
-    }
-  }
-};
-```
 
 #### Send One Day Reminder
-```javascript
-const sendOneDayReminder = async (rental, rentalId) => {
-  const notification = {
-    type: "one_day_reminder",
-    bookName: rental.bookName,
-    userEmail: rental.userEmail,
-    message: `⏰ 1 day to go! Your rental for '${rental.bookName}' ends tomorrow (${rental.endDate}). Please return the book on time.`,
-    rentalId,
-    createdAt: new Date().toISOString(),
-    read: false
-  };
-  
-  const emailKey = rental.userEmail.replace(/\./g, "_");
-  
-  // Save to user notifications
-  await fetch(
-    `${DB_BASE_URL}/userNotifications/${emailKey}.json`,
-    {
-      method: "POST",
-      body: JSON.stringify(notification)
-    }
-  );
-  
-  // Update rental status
-  await fetch(
-    `${DB_BASE_URL}/rentBook/${rentalId}.json`,
-    {
-      method: "PATCH",
-      body: JSON.stringify({ status: "one_day_reminder" })
-    }
-  );
-};
-```
+
 
 ---
 
@@ -678,20 +324,6 @@ const searchQuery = searchParams.get('search') || '';
 ```
 
 **Filtering Logic:**
-```javascript
-const filteredBooks = books.filter((book) => {
-  // Category filter
-  const categoryMatch = selectedCategory === "All" || 
-    book.type?.toLowerCase() === selectedCategory.toLowerCase();
-  
-  // Search filter
-  const searchMatch = 
-    book.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    book.description?.toLowerCase().includes(searchQuery.toLowerCase());
-  
-  return categoryMatch && searchMatch;
-});
-```
 
 #### 2. AdminRequests.jsx
 
@@ -948,22 +580,6 @@ const validateForm = () => {
 - Logout
 
 **Notification Badge Logic:**
-```javascript
-const AdminNav = () => {
-  const notificationCount = useSelector(state => state.auth.adminNotificationCount);
-  
-  return (
-    <Link to="/admin/notifications" className="relative">
-      Notifications
-      {notificationCount > 0 && (
-        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-          {notificationCount}
-        </span>
-      )}
-    </Link>
-  );
-};
-```
 
 #### 2. Categories.jsx (Admin & User)
 
@@ -1406,60 +1022,7 @@ const markAsOverdue = async (rental, rentalId) => {
 ### Notification Display
 
 **User Notification Card:**
-```javascript
-const NotificationCard = ({ notification }) => {
-  const getNotificationStyle = (type) => {
-    switch (type) {
-      case "one_day_reminder":
-        return {
-          bg: "bg-blue-100",
-          border: "border-blue-500",
-          icon: "📅"
-        };
-      case "rental_reminder":
-        return {
-          bg: "bg-orange-100",
-          border: "border-orange-500",
-          icon: "⏰"
-        };
-      case "overdue":
-        return {
-          bg: "bg-red-100",
-          border: "border-red-500",
-          icon: "⚠️"
-        };
-      case "request_approved":
-        return {
-          bg: "bg-green-100",
-          border: "border-green-500",
-          icon: "✅"
-        };
-      default:
-        return {
-          bg: "bg-gray-100",
-          border: "border-gray-500",
-          icon: "📢"
-        };
-    }
-  };
-  
-  const style = getNotificationStyle(notification.type);
-  
-  return (
-    <div className={`${style.bg} border-l-4 ${style.border} p-4 mb-3 rounded`}>
-      <div className="flex items-start">
-        <span className="text-2xl mr-3">{style.icon}</span>
-        <div className="flex-1">
-          <p className="text-sm text-gray-800">{notification.message}</p>
-          <p className="text-xs text-gray-500 mt-1">
-            {new Date(notification.createdAt).toLocaleString()}
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};
-```
+
 
 ---
 
@@ -1476,28 +1039,6 @@ localStorage.setItem("role", role);
 ```
 
 **Token Validation:**
-```javascript
-export const validateTokenApi = async (token) => {
-  try {
-    const response = await fetch(
-      `${AUTH_BASE_URL}/accounts:lookup?key=${FIREBASE_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ idToken: token })
-      }
-    );
-    
-    if (response.ok) {
-      return { valid: true };
-    }
-    
-    return { valid: false };
-  } catch (error) {
-    return { valid: false };
-  }
-};
-```
 
 ### 2. Email Sanitization
 
@@ -1564,14 +1105,7 @@ const ProtectedRoute = ({ children, allowedRole }) => {
 - React automatically escapes values in JSX
 - User input is safe by default
 
-**Dangerous HTML (Avoid):**
-```javascript
-// NEVER DO THIS:
-<div dangerouslySetInnerHTML={{__html: userInput}} />
 
-// ALWAYS DO THIS:
-<div>{userInput}</div>
-```
 
 ---
 
@@ -1697,6 +1231,7 @@ if (!result.valid) {
 
 **Solution:**
 ```javascript
+
 // Ensure PATCH request is used
 await fetch(`${DB_BASE_URL}/books/${bookKey}.json`, {
   method: "PATCH",  // Not PUT
@@ -1726,27 +1261,13 @@ const notifications = Object.entries(data)
 ```
 
 #### 4. Cart Items Disappearing
-
-**Problem:** Cart clears on page refresh
-
-**Solution:**
-```javascript
 // Persist cart to localStorage
-const cartMiddleware = store => next => action => {
-  const result = next(action);
-  if (action.type.startsWith('cart/')) {
-    const cart = store.getState().cart;
-    localStorage.setItem('cart', JSON.stringify(cart));
-  }
-  return result;
-};
 
 // Load cart on app start
 const persistedCart = localStorage.getItem('cart');
 const preloadedState = {
   cart: persistedCart ? JSON.parse(persistedCart) : { items: [] }
 };
-```
 
 #### 5. Firebase CORS Errors
 

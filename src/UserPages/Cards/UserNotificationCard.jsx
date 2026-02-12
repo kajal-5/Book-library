@@ -11,6 +11,7 @@ const UserNotificationCard = ({ notification }) => {
   let statusText = "📢 Notification";
   let icon = "📢";
 
+
   if (isAccepted) {
     bgColor = "bg-green-100";
     textColor = "text-green-800";
@@ -83,12 +84,12 @@ const UserNotificationCard = ({ notification }) => {
             >
               Return Book
             </button>
-            <button 
+            {/* <button 
               onClick={() => window.location.href = `/rent-again?rentalId=${notification.rentalId}`}
               className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-[10px] sm:text-xs py-1.5 sm:py-2 px-2 sm:px-3 rounded-lg font-semibold hover:from-blue-600 hover:to-blue-700 transition-all shadow-md"
             >
               Rent Again
-            </button>
+            </button> */}
           </div>
         )}
       </div>

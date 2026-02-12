@@ -24,7 +24,7 @@ export const addBook = createAsyncThunk(
   async (bookData, { rejectWithValue }) => {
     try {
       const savedBook = await addBookApi(bookData);
-      return savedBook; // ✅ IMPORTANT
+      return savedBook;
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -99,7 +99,7 @@ const bookSlice = createSlice({
       })
       .addCase(addBook.fulfilled, (state, action) => {
         state.loading = false;
-        state.list.unshift(action.payload); // ✅ ONLY FIX
+        state.list.unshift(action.payload);
       })
       .addCase(addBook.rejected, (state, action) => {
         state.loading = false;

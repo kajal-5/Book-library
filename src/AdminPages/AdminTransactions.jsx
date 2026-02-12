@@ -300,11 +300,11 @@ const AdminTransactions = () => {
                       {/* Right: Amount */}
                       <div className="text-right ml-10 md:px-10 ">
                         <p className={`text-lg font-bold ${
-                          transaction.type === "security_refund" 
+                          (transaction.type === "security_refund" || transaction.type === "book_drop")
                             ? "text-red-600" 
                             : "text-green-600"
                         }`}>
-                          {transaction.type === "security_refund" ? "-" : "+"}₹{parseFloat(transaction.amount).toFixed(2)}
+                          {(transaction.type === "security_refund" || transaction.type === "book_drop") ? "-" : "+"}₹{parseFloat(transaction.amount).toFixed(2)}
                         </p>
                         {transaction.quantity && (
                           <p className="text-xs md:text-md text-gray-700">Qty: {transaction.quantity}</p>
