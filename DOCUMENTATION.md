@@ -27,7 +27,6 @@ User/Admin → Login → Authentication → Role Check → Dashboard
                                          ↓
                                  Component Rendering
 ```
-
 ### Technology Stack Details
 
 #### Frontend Architecture
@@ -337,36 +336,6 @@ const searchQuery = searchParams.get('search') || '';
 - Status badges (pending, approved, rejected)
 
 **Approve Request Flow:**
-```javascript
-const handleApprove = async (requestId, bookName, type) => {
-  // 1. Update request status
-  await fetch(`${DB_BASE_URL}/adminNotifications/${requestId}.json`, {
-    method: "PATCH",
-    body: JSON.stringify({ 
-      status: "approved",
-      approvedAt: new Date().toISOString()
-    })
-  });
-  
-  // 2. If drop request, update book quantity
-  if (type === "drop_request") {
-    const bookKey = bookName.toLowerCase().replace(/\s+/g, "-");
-    const bookResponse = await fetch(`${DB_BASE_URL}/books/${bookKey}.json`);
-    const book = await bookResponse.json();
-    
-    await fetch(`${DB_BASE_URL}/books/${bookKey}.json`, {
-      method: "PATCH",
-      body: JSON.stringify({ quantity: book.quantity + 1 })
-    });
-  }
-  
-  // 3. Notify user
-  await sendUserNotification(userEmail, "Request Approved", message);
-  
-  // 4. Refresh request list
-  dispatch(fetchDropRequests());
-};
-```
 
 #### 3. AdminNotifications.jsx
 
@@ -383,18 +352,12 @@ const handleApprove = async (requestId, bookName, type) => {
 ```javascript
 const notificationTypes = {
   drop_request: {
-    icon: "📦",
-    color: "blue",
     message: "wants to drop off a book"
   },
   return_request: {
-    icon: "↩️",
-    color: "green",
     message: "wants to return a book"
   },
   overdue: {
-    icon: "⚠️",
-    color: "red",
     message: "has an overdue rental"
   }
 };
@@ -415,21 +378,6 @@ const notificationTypes = {
 - Real-time book availability updates
 
 **Search Implementation:**
-```javascript
-const [searchQuery, setSearchQuery] = useState("");
-
-const filteredBooks = books.filter((book) => {
-  const query = searchQuery.toLowerCase();
-  const matchesSearch = 
-    book.name.toLowerCase().includes(query) ||
-    book.description?.toLowerCase().includes(query);
-  
-  const matchesCategory = selectedCategory === "All" ||
-    book.type?.toLowerCase() === selectedCategory.toLowerCase();
-  
-  return matchesSearch && matchesCategory && book.quantity > 0;
-});
-```
 
 #### 2. Cart.jsx
 
@@ -442,48 +390,6 @@ const filteredBooks = books.filter((book) => {
 - Calculate total rental fee and security deposit
 - Checkout with validation
 
-**Checkout Process:**
-```javascript
-const handleCheckout = async () => {
-  // 1. Validate cart
-  if (cartItems.length === 0) {
-    toast.error("Cart is empty!");
-    return;
-  }
-  
-  // 2. Process each item
-  for (const item of cartItems) {
-    // Create rental record
-    const rentalId = await createRentTransaction({
-      bookName: item.book.name,
-      userEmail,
-      startDate: item.startDate,
-      endDate: item.endDate,
-      rentalFee: item.rentalFee,
-      securityDeposit: item.securityDeposit,
-      quantity: item.quantity
-    });
-    
-    // Save security deposit transaction
-    await createSecurityDepositTransaction({
-      userEmail,
-      bookName: item.book.name,
-      amount: item.securityDeposit,
-      rentalId
-    });
-  }
-  
-  // 3. Clear cart
-  dispatch(clearCart());
-  
-  // 4. Show success message
-  toast.success("Checkout successful! Check 'My Rentals' for details.");
-  
-  // 5. Navigate to rentals page
-  navigate("/user/rentals");
-};
-```
-
 #### 3. MyRentals.jsx
 
 **Purpose:** Display user's active and past rentals
@@ -495,33 +401,6 @@ const handleCheckout = async () => {
 - Rental details (dates, fees, deposits)
 - Return date countdown
 
-**Rental Status Display:**
-```javascript
-const getStatusBadge = (rental) => {
-  const now = new Date();
-  const endDate = new Date(rental.endDate);
-  const daysRemaining = Math.ceil((endDate - now) / (1000 * 60 * 60 * 24));
-  
-  if (rental.status === "returned") {
-    return <span className="bg-green-500 text-white px-2 py-1 rounded">Returned</span>;
-  }
-  
-  if (daysRemaining < 0) {
-    return <span className="bg-red-500 text-white px-2 py-1 rounded">Overdue</span>;
-  }
-  
-  if (daysRemaining === 0) {
-    return <span className="bg-orange-500 text-white px-2 py-1 rounded">Due Today</span>;
-  }
-  
-  if (daysRemaining === 1) {
-    return <span className="bg-yellow-500 text-white px-2 py-1 rounded">Due Tomorrow</span>;
-  }
-  
-  return <span className="bg-blue-500 text-white px-2 py-1 rounded">Active ({daysRemaining} days left)</span>;
-};
-```
-
 #### 4. DropBook.jsx
 
 **Purpose:** Allow users to submit book drop-off requests
@@ -532,28 +411,6 @@ const getStatusBadge = (rental) => {
 - Image upload (URL input)
 - Validation before submission
 - Success/error notifications
-
-**Form Validation:**
-```javascript
-const validateForm = () => {
-  if (!bookName.trim()) {
-    toast.error("Book name is required");
-    return false;
-  }
-  
-  if (!imageUrl.trim() || !isValidUrl(imageUrl)) {
-    toast.error("Please enter a valid image URL");
-    return false;
-  }
-  
-  if (!contactNo.match(/^\d{10}$/)) {
-    toast.error("Contact number must be 10 digits");
-    return false;
-  }
-  
-  return true;
-};
-```
 
 ### Shared Components
 
@@ -596,152 +453,6 @@ const validateForm = () => {
 - Education
 - Technology
 - Business & Finance
-
-**URL Routing for Categories:**
-```javascript
-const handleCategoryClick = (category) => {
-  if (category === "All") {
-    navigate("/admin"); // or "/user" for users
-  } else {
-    const slug = category.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "and");
-    navigate(`/admin/category/${slug}`);
-  }
-};
-```
-
----
-
-## Database Schema
-
-### Firebase Realtime Database Structure
-
-```json
-{
-  "users": {
-    "user_email_com": {
-      "email": "user@email.com",
-      "name": "John Doe",
-      "role": "user",
-      "contactNo": "1234567890",
-      "address": "123 Main Street, City",
-      "createdAt": "2026-01-23T10:00:00.000Z"
-    },
-    "admin_email_com": {
-      "email": "admin@email.com",
-      "name": "Admin Name",
-      "role": "admin",
-      "contactNo": "9876543210",
-      "createdAt": "2026-01-20T08:00:00.000Z"
-    }
-  },
-  
-  "books": {
-    "the-great-gatsby": {
-      "name": "The Great Gatsby",
-      "description": "A classic American novel",
-      "type": "Fiction",
-      "price": 500,
-      "quantity": 3,
-      "imageUrl": "https://example.com/image.jpg",
-      "createdAt": "2026-01-15T12:00:00.000Z"
-    },
-    "sapiens": {
-      "name": "Sapiens",
-      "description": "A brief history of humankind",
-      "type": "History",
-      "price": 600,
-      "quantity": 2,
-      "imageUrl": "https://example.com/sapiens.jpg",
-      "createdAt": "2026-01-16T14:30:00.000Z"
-    }
-  },
-  
-  "rentBook": {
-    "-NaBcDefGhijk12345": {
-      "bookName": "The Great Gatsby",
-      "userEmail": "user@email.com",
-      "startDate": "2026-01-23",
-      "endDate": "2026-01-30",
-      "rentalFee": 10.5,
-      "securityDeposit": 24.5,
-      "quantity": 1,
-      "status": "active",
-      "createdAt": "2026-01-23T10:00:00.000Z"
-    }
-  },
-  
-  "adminNotifications": {
-    "-NaBcDefGhijk67890": {
-      "type": "drop_request",
-      "bookName": "To Kill a Mockingbird",
-      "userEmail": "user@email.com",
-      "userName": "John Doe",
-      "contactNo": "1234567890",
-      "message": "I want to drop off this book",
-      "imageUrl": "https://example.com/mockingbird.jpg",
-      "status": "pending",
-      "createdAt": "2026-01-23T11:00:00.000Z"
-    },
-    "-NaBcDefGhijk11111": {
-      "type": "return_request",
-      "bookName": "The Great Gatsby",
-      "userEmail": "user@email.com",
-      "rentalId": "-NaBcDefGhijk12345",
-      "status": "pending",
-      "createdAt": "2026-01-29T15:00:00.000Z"
-    }
-  },
-  
-  "userNotifications": {
-    "user_email_com": {
-      "-NaBcDefGhijk22222": {
-        "type": "one_day_reminder",
-        "bookName": "The Great Gatsby",
-        "message": "⏰ 1 day to go! Your rental ends tomorrow.",
-        "rentalId": "-NaBcDefGhijk12345",
-        "createdAt": "2026-01-29T10:00:00.000Z",
-        "read": false
-      },
-      "-NaBcDefGhijk33333": {
-        "type": "request_approved",
-        "message": "Your drop request has been approved!",
-        "createdAt": "2026-01-23T12:00:00.000Z",
-        "read": true
-      }
-    }
-  },
-  
-  "transactions": {
-    "-NaBcDefGhijk44444": {
-      "userEmail": "user@email.com",
-      "bookName": "The Great Gatsby",
-      "type": "rental_fee",
-      "amount": 10.5,
-      "rentalId": "-NaBcDefGhijk12345",
-      "date": "2026-01-23T10:00:00.000Z",
-      "status": "completed"
-    },
-    "-NaBcDefGhijk55555": {
-      "userEmail": "user@email.com",
-      "bookName": "The Great Gatsby",
-      "type": "security_deposit",
-      "amount": 24.5,
-      "rentalId": "-NaBcDefGhijk12345",
-      "date": "2026-01-23T10:00:00.000Z",
-      "status": "held"
-    },
-    "-NaBcDefGhijk66666": {
-      "userEmail": "user@email.com",
-      "bookName": "The Great Gatsby",
-      "type": "security_deposit_refund",
-      "amount": 24.5,
-      "rentalId": "-NaBcDefGhijk12345",
-      "date": "2026-01-30T16:00:00.000Z",
-      "status": "completed"
-    }
-  }
-}
-```
 
 ### Database Rules (Security)
 
@@ -855,17 +566,17 @@ Status: "active"
 1 Day Before End Date
       ↓
 Status: "one_day_reminder"
-Notification: "⏰ 1 day to go!"
+Notification: " 1 day to go!"
       ↓
 On End Date
       ↓
 Status: "reminder_sent"
-Notification: "⏰ Return today!"
+Notification: " Return today!"
       ↓
 Past End Date
       ↓
 Status: "overdue"
-Notification: "⚠️ Book overdue!"
+Notification: " Book overdue!"
       ↓
 User Requests Return
       ↓
@@ -982,42 +693,14 @@ const sendOneDayReminder = async (rental, rentalId) => {
 ```
 
 **B. Rental Reminder (Due Today)**
-```javascript
-const sendRentalReminder = async (rental, rentalId) => {
-  const notification = {
-    type: "rental_reminder",
-    bookName: rental.bookName,
-    userEmail: rental.userEmail,
-    message: `⏰ Your rental for '${rental.bookName}' ends today (${rental.endDate}). Please return the book today.`,
-    rentalId,
-    createdAt: new Date().toISOString(),
-    read: false,
-    priority: "urgent"
-  };
+
   
   // Same notification saving logic
   // Update status to "reminder_sent"
-};
-```
 
-**C. Overdue Notification**
-```javascript
-const markAsOverdue = async (rental, rentalId) => {
-  const notification = {
-    type: "overdue",
-    bookName: rental.bookName,
-    userEmail: rental.userEmail,
-    message: `⚠️ Your rental for '${rental.bookName}' is overdue! Please return the book immediately to avoid penalties.`,
-    rentalId,
-    createdAt: new Date().toISOString(),
-    read: false,
-    priority: "critical"
-  };
   
   // Same notification saving logic
   // Update status to "overdue"
-};
-```
 
 ### Notification Display
 
@@ -1122,11 +805,6 @@ npm run build
 
 ### 2. Firebase Hosting Deployment
 
-**Install Firebase CLI:**
-```bash
-npm install -g firebase-tools
-```
-
 **Login to Firebase:**
 ```bash
 firebase login
@@ -1146,69 +824,15 @@ firebase init hosting
 **Deploy:**
 ```bash
 npm run build
-firebase deploy --only hosting
 ```
 
-### 3. Vercel Deployment
 
-**Install Vercel CLI:**
-```bash
-npm install -g vercel
-```
 
-**Deploy:**
-```bash
-vercel
 
-# Follow prompts:
-# - Build command: npm run build
-# - Output directory: dist
-# - Install command: npm install
-```
-
-### 4. Netlify Deployment
-
-**Using Netlify CLI:**
-```bash
-npm install -g netlify-cli
-netlify deploy --prod
-
-# Build directory: dist
-```
-
-**Using Netlify Dashboard:**
-1. Connect GitHub repository
-2. Build settings:
-   - Build command: `npm run build`
-   - Publish directory: `dist`
-3. Deploy
-
-### 5. Environment Variables
-
-**Create `.env` file:**
-```env
-VITE_FIREBASE_API_KEY=your_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-VITE_FIREBASE_DATABASE_URL=https://your_project.firebaseio.com
-```
-
-**Update API files:**
-```javascript
-const FIREBASE_API_KEY = import.meta.env.VITE_FIREBASE_API_KEY;
-const DB_BASE_URL = import.meta.env.VITE_FIREBASE_DATABASE_URL;
-```
-
----
-
-## Troubleshooting
 
 ### Common Issues & Solutions
 
 #### 1. Authentication Issues
-
-**Problem:** "Session expired" error
-
-**Solution:**
 ```javascript
 // Check token validity
 const token = localStorage.getItem("token");
@@ -1226,10 +850,6 @@ if (!result.valid) {
 ```
 
 #### 2. Book Quantity Not Updating
-
-**Problem:** Quantity doesn't decrease after rental
-
-**Solution:**
 ```javascript
 
 // Ensure PATCH request is used
@@ -1243,10 +863,6 @@ dispatch(fetchBooks());
 ```
 
 #### 3. Notifications Not Showing
-
-**Problem:** User notifications not appearing
-
-**Solution:**
 ```javascript
 // Check notification fetch
 const emailKey = email.replace(/\./g, "_");
@@ -1270,29 +886,7 @@ const preloadedState = {
 };
 
 #### 5. Firebase CORS Errors
-
-**Problem:** Cross-origin request blocked
-
-**Solution:**
-- Firebase Realtime Database allows CORS by default
-- Ensure URLs end with `.json`
-- Check Firebase rules are set to allow read/write
-
 #### 6. Rental Date Validation
-
-**Problem:** Users can select past dates
-
-**Solution:**
-```javascript
-const today = new Date().toISOString().split('T')[0];
-
-<input 
-  type="date" 
-  min={today}
-  value={startDate}
-  onChange={(e) => setStartDate(e.target.value)}
-/>
-```
 
 #### 7. Return Request Not Processing
 
@@ -1324,122 +918,10 @@ const handleApproveReturn = async (requestId, rental) => {
     toast.error("Failed to process return");
   }
 };
-```
 
----
 
-## Performance Optimization
 
-### 1. Code Splitting
-
-```javascript
-// Use React.lazy for route-based code splitting
-import { lazy, Suspense } from 'react';
-
-const AdminHome = lazy(() => import('./AdminPages/AdminHome'));
-const UserHome = lazy(() => import('./UserPages/Home'));
-
-function App() {
-  return (
-    <Suspense fallback={<LoadingSpinner />}>
-      <Routes>
-        <Route path="/admin" element={<AdminHome />} />
-        <Route path="/user" element={<UserHome />} />
-      </Routes>
-    </Suspense>
-  );
-}
-```
-
-### 2. Memoization
-
-```javascript
-import { useMemo } from 'react';
-
-const filteredBooks = useMemo(() => {
-  return books.filter(book => 
-    book.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-}, [books, searchQuery]);
-```
-
-### 3. Debounced Search
-
-```javascript
-import { useState, useEffect } from 'react';
-
-const useDebounce = (value, delay) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => clearTimeout(handler);
-  }, [value, delay]);
-
-  return debouncedValue;
-};
-
-// Usage
-const [searchQuery, setSearchQuery] = useState("");
-const debouncedSearch = useDebounce(searchQuery, 500);
-```
-
----
-
-## Testing Guidelines
-
-### Unit Testing Example
-
-```javascript
-import { render, screen, fireEvent } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
-import store from './Store/Store';
-import LoginPage from './Login/LoginPage';
-
-describe('LoginPage', () => {
-  test('renders login form', () => {
-    render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <LoginPage />
-        </BrowserRouter>
-      </Provider>
-    );
-    
-    expect(screen.getByPlaceholderText('Email')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
-    expect(screen.getByText('Login')).toBeInTheDocument();
-  });
-  
-  test('shows error on invalid credentials', async () => {
-    render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <LoginPage />
-        </BrowserRouter>
-      </Provider>
-    );
-    
-    fireEvent.change(screen.getByPlaceholderText('Email'), {
-      target: { value: 'invalid@email.com' }
-    });
-    fireEvent.change(screen.getByPlaceholderText('Password'), {
-      target: { value: 'wrongpassword' }
-    });
-    fireEvent.click(screen.getByText('Login'));
-    
-    expect(await screen.findByText('Invalid credentials')).toBeInTheDocument();
-  });
-});
-```
-
----
-
-## API Reference
+### API Reference
 
 ### Authentication APIs
 
