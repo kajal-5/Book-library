@@ -37,12 +37,13 @@ const BookCard = ({ book }) => {
           if (adminUser && adminUser.contactNo) {
             setAdminContact(adminUser.contactNo);
           } else {
-            const firstUserWithContact = Object.values(users).find(
-              (user) => user.contactNo,
-            );
-            if (firstUserWithContact) {
-              setAdminContact(firstUserWithContact.contactNo);
-            }
+            setAdminContact("9999999999");// Default contact if no admin found
+            // const firstUserWithContact = Object.values(users).find(
+            //   (user) => user.contactNo,
+            // );
+            // if (firstUserWithContact) {
+            //   setAdminContact(firstUserWithContact.contactNo);
+            // }
           }
         }
       } catch (error) {
@@ -54,10 +55,10 @@ const BookCard = ({ book }) => {
   }, []);
 
   const handlePurchase = async ({ book, quantity, action }) => {
-    if (!userEmail) {
-      alert("Please log in to purchase");
-      return;
-    }
+    // if (!userEmail) {
+    //   alert("Please log in to purchase");
+    //   return;
+    // }
 
     if (quantity > book.quantity) {
       alert("Not enough quantity available");
@@ -120,7 +121,7 @@ const BookCard = ({ book }) => {
           purchaseDate: new Date().toISOString(),
           timestamp: Date.now(),
         };
-
+/////////////// Save purchase record in Firebase
         const purchaseResponse = await fetch(
           `https://book-app-339c8-default-rtdb.firebaseio.com/bookpurches.json`,
           {
@@ -397,7 +398,7 @@ const BookCard = ({ book }) => {
           rentalFee: rentalFee.toFixed(2),
           securityDeposit: securityDeposit.toFixed(2),
           totalAmount: totalAmount.toFixed(2),
-          rentalDate: new Date().toISOString(),
+          rentalDate: new Date().toISOString(),//oreder date
           status: "active",
           returnStatus: "not_returned",
         };
